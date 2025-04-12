@@ -6,8 +6,9 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        terracotta: 'rgb(116,127,100)',
-        oliveGreen: 'rgb(203,122,91)',
+        oliveGreen: 'rgb(116,127,100)',
+        darkGreen: 'rgb(71,81,50)',
+        terracotta: 'rgb(203,122,91)',
         cream: 'rgb(232,226,216)',
         slateBlue: 'rgb(92,117,122)',
       }

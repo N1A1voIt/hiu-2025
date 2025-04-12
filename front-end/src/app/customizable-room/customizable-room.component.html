@@ -33,16 +33,19 @@
 
     <!-- Edit mode instructions -->
     <div *ngIf="isModificationMode"
-         class="absolute bottom-0 left-0 m-4 p-4 bg-white bg-opacity-90 rounded-lg shadow-lg text-gray-800 z-20">
+         class="absolute bottom-0 left-0 m-4 p-4 bg-[#ffffff42] backdrop-blur-[10px] border border-white bg-opacity-90 rounded-lg shadow-lg text-white z-20">
         <h2 class="text-lg font-semibold mb-2">Edit Mode</h2>
         <ul class="text-sm mb-3">
             <li class="mb-1">• Click on any object to select it</li>
             <li class="mb-1">• Drag to move the selected object</li>
             <li class="mb-1">• Press R/T keys to rotate object</li>
         </ul>
-        <div *ngIf="selectedObject" class="text-xs font-medium text-blue-600">
+        <div *ngIf="selectedObject" class="text-xs text-slateBlue mb-1">
             Selected: {{ selectedObject.name }}
         </div>
-        <app-action-btn [action]="toggleModificationMode" [iconComponent]="FermerComponent"></app-action-btn>
+        <button class="p-4 bg-oliveGreen hover:bg-darkGreen rounded-lg" (click)="toggleModificationMode()">
+            Retour
+        </button>
+<!--        <app-action-btn [action]="toggleModificationMode" [iconComponent]="FermerComponent"></app-action-btn>-->
     </div>
 </div>
