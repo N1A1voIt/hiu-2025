@@ -1,0 +1,15 @@
+<form (ngSubmit)="onSubmit()" enctype="multipart/form-data">
+  <label for="name">Name:</label>
+  <input type="text" id="name" [(ngModel)]="name" name="name" required />
+
+  <label for="family">Family:</label>
+  <select id="family" [(ngModel)]="family" name="family" required>
+    <option *ngFor="let family of families" [value]="family">{{ family }}</option>
+  </select>
+  <button type="button" (click)="createNewFamily()">Create New Family</button>
+
+  <label for="photo">Upload Photo:</label>
+  <input type="file" id="photo" (change)="onPhotoChange($event)" accept="image/*" required />
+
+  <button type="submit">Register</button>
+</form>
