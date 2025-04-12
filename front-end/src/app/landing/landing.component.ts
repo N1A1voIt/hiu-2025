@@ -35,6 +35,7 @@ export class LandingComponent {
     this.isAnimating = true;
     this.isClicked = !this.isClicked;
     this.isAnimating = false;
+
   }
   clickChat() {
     this.isAnimatingChat = true;
