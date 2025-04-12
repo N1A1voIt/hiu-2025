@@ -3,12 +3,11 @@ import { provideRouter } from '@angular/router';
 
 import { routes } from './app.routes';
 import { provideClientHydration } from '@angular/platform-browser';
-import { FIREBASE_OPTIONS } from '@angular/fire/compat';
-import { initializeApp } from "firebase/app";
-import { AngularFirestoreModule } from "@angular/fire/compat/firestore";
-import { getFirestore, provideFirestore } from "@angular/fire/firestore";
-import { provideFirebaseApp } from '@angular/fire/app';
 import {provideHttpClient} from '@angular/common/http';
+import {FIREBASE_OPTIONS} from '@angular/fire/compat';
+import {initializeApp, provideFirebaseApp} from '@angular/fire/app';
+import {AngularFirestoreModule} from '@angular/fire/compat/firestore';
+import {getFirestore, provideFirestore} from '@angular/fire/firestore';
 
 export const environment = {
   production: false,
@@ -34,3 +33,4 @@ export const appConfig: ApplicationConfig = {
     provideFirestore(() => getFirestore()),
   ]
 };
+
