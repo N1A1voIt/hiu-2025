@@ -94,6 +94,7 @@ export class CustomizableRoomComponent {
 
     // Apply rotation around the Y axis
     this.selectedObject.rotation.y += angle;
+    console.log('rotateObject:', this.selectedObject.rotation);
   }
 
   constructor(private ngZone: NgZone) {}
@@ -128,7 +129,7 @@ export class CustomizableRoomComponent {
     this.camera.position.set(0, this.camHeight, 0); // Starting position at height 5
 
     // Lighting setup with shadows
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.5); // Reduced ambient light intensity
+    const ambientLight = new THREE.AmbientLight(0xffffff, 1); // Reduced ambient light intensity
     this.scene?.add(ambientLight);
 
     // Add directional light (sun-like) for main shadows
@@ -174,6 +175,30 @@ export class CustomizableRoomComponent {
     const hemiLight = new THREE.HemisphereLight(0xffffff, 0x404040, 0.6);
     hemiLight.position.set(0, 10, 0);
     this.scene?.add(hemiLight);
+
+    // Add wall-highlighting lights
+    const wallLights = [
+      { position: [15, 7, 0], target: [-15, 7, 0], intensity: 0.6 },  // Light across room width
+      { position: [0, 7, 15], target: [0, 7, -15], intensity: 0.6 }   // Light across room depth
+    ];
+
+    wallLights.forEach(config => {
+      const light = new THREE.DirectionalLight(0xffffff, config.intensity);
+      light.position.set(config.position[0], config.position[1], config.position[2]);
+
+      // Create target for directional light
+      const target = new THREE.Object3D();
+      target.position.set(config.target[0], config.target[1], config.target[2]);
+      this.scene?.add(target);
+      light.target = target;
+
+      // Enable shadows but with lower resolution for performance
+      light.castShadow = true;
+      light.shadow.mapSize.width = 1024;
+      light.shadow.mapSize.height = 1024;
+
+      this.scene?.add(light);
+    });
 
     // Renderer
     this.renderer = new THREE.WebGLRenderer({
@@ -252,7 +277,7 @@ export class CustomizableRoomComponent {
   loadRoom() {
     const loader = new GLTFLoader();
     loader.load(
-        '/assets/glb/room_rock.glb', // Updated model path
+        '/assets/glb/room_beige.glb', // Updated model path
         (gltf) => {
           this.roomModel = gltf.scene;
           // @ts-ignore
@@ -262,8 +287,8 @@ export class CustomizableRoomComponent {
           gltf.scene.position.set(0, 0, 0); // Center the model
 
           // Set camera position and lookAt with updated Y values
-          this.camera?.position.set(1, this.camHeight, 1);
-          this.camera?.lookAt(0, this.camHeight, 0);
+          this.camera?.position.set(-15, this.camHeight, 0);
+          this.camera?.lookAt(8, this.camHeight, 9);
 
           // Process the model to set up colliders and identify walls
           this.setupRoom();
@@ -333,12 +358,67 @@ export class CustomizableRoomComponent {
     );
   }
 
+  setupWallMaterial(wallMesh: THREE.Mesh) {
+    const updateMaterial = (material: THREE.Material) => {
+      if (material instanceof THREE.MeshStandardMaterial) {
+        // Adjust material properties for better light response
+        material.roughness = 0.8;        // Higher roughness for walls
+        material.metalness = 0.1;        // Low metalness for matte walls
+        material.envMapIntensity = 0.5;  // Subtle environment response
+
+        // Subtle ambient occlusion to enhance corners
+        if (!material.aoMap) {
+          console.log(`Setting up enhanced material for wall: ${wallMesh.name}`);
+        }
+
+        material.needsUpdate = true;
+      } else if (material instanceof THREE.MeshBasicMaterial) {
+        // Convert basic materials to standard materials
+        const color = material.color.clone();
+        const map = material.map;
+
+        const newMaterial = new THREE.MeshStandardMaterial({
+          color: color,
+          map: map,
+          roughness: 0.8,
+          metalness: 0.1
+        });
+
+        return newMaterial;
+      }
+      return material;
+    };
+
+    // Handle both single materials and material arrays
+    if (Array.isArray(wallMesh.material)) {
+      wallMesh.material = wallMesh.material.map(updateMaterial);
+    } else if (wallMesh.material) {
+      wallMesh.material = updateMaterial(wallMesh.material);
+    }
+  }
+
   setupRoom() {
+
     this.scene?.traverse((object) => {
       // Store object by name for later material modifications
       if (object.name) {
         this.objectsMap.set(object.name, object);
         console.log('Found object:', object.name);
+      }
+
+      if (object instanceof THREE.Mesh) {
+        // Existing code for wall identification
+
+        // Explicitly ensure walls receive shadows
+        if (object.name.includes('Wall')) {
+          object.receiveShadow = true;
+          object.castShadow = false; // Walls typically don't cast shadows
+
+          // Ensure wall material is properly set up
+          if (object.material) {
+            this.setupWallMaterial(object);
+          }
+        }
       }
 
       // Set up colliders for walls and furniture
@@ -531,6 +611,7 @@ export class CustomizableRoomComponent {
 
     // Apply movement
     this.selectedObject.position.add(movement);
+    console.log('Moved object:', this.selectedObject.position);
   }
 
   onWindowResize() {
@@ -597,8 +678,18 @@ export class CustomizableRoomComponent {
     // Use setTimeout to ensure the room is fully loaded first
     setTimeout(() => {
       // Load furniture at specified positions
-      this.loadModel('couch', new THREE.Vector3(5, 2, 5));
-      this.loadModel('bed', new THREE.Vector3(5, 2, 15));
+      this.loadModel('carpet', new THREE.Vector3(0, -2.25, 0));
+      this.loadModel('wardrobe', new THREE.Vector3(6.5, -1.5, -16), new THREE.Vector3(1,1,1), new THREE.Euler(0,-0.78,0));
+      // this.loadModel('bed', new THREE.Vector3(0,0,0));
+      this.loadModel('couch', new THREE.Vector3(-36.6, -28.8, -39), new THREE.Vector3(1,1,1), new THREE.Euler(0,-2.35,0));
+      this.loadModel('Bookstack_bglb', new THREE.Vector3(7.9,-0.65,3.6), new THREE.Vector3(0.55,0.55,0.55));
+      this.loadModel('Bookstack_bglb', new THREE.Vector3(10,-0.65,3.6), new THREE.Vector3(0.55,0.55,0.55), new THREE.Euler(0,-0.78,0));
+      this.loadModel('Bookstack_bglb', new THREE.Vector3(1.8,-0.65,11.8), new THREE.Vector3(0.55,0.55,0.55), new THREE.Euler(0,-0.45,0));
+      this.loadModel('coffee_table', new THREE.Vector3(0, 2, 0), new THREE.Vector3(3.75,3.75,3.75));
+      this.loadModel('cushion', new THREE.Vector3(1.65, 1.25, 6.89), new THREE.Vector3(5,5,5));
+      this.loadModel('cushion', new THREE.Vector3(-2, 1.25, 3.89), new THREE.Vector3(5,5,5));
+
+      // this.loadModel('bed', new THREE.Vector3(5, 2, 15));
       // this.loadModel('desk', new THREE.Vector3(-5, 0, 5), new THREE.Vector3(1, 1, 1), new THREE.Euler(0, Math.PI/2, 0));
       // this.loadModel('chair', new THREE.Vector3(-5, 0, 7));
     }, 1000); // 1-second delay to ensure the room is loaded
