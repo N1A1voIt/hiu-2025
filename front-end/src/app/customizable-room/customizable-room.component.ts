@@ -116,6 +116,11 @@ export class CustomizableRoomComponent {
     });
   }
 
+  backToLanding() {
+    console.log("backToLanding");
+    this.router.navigate(['/landing']);
+  }
+
   initThree() {
     // Scene setup
     this.scene = new THREE.Scene();
