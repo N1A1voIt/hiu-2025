@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, ViewChild, NgZone } from '@angular/core';
+import {Component, ElementRef, OnInit, ViewChild, NgZone, AfterViewInit} from '@angular/core';
 import {CommonModule, NgIf} from '@angular/common';
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
@@ -13,9 +13,27 @@ import { PointerLockControls } from 'three/examples/jsm/controls/PointerLockCont
   templateUrl: './child-room.component.html',
   styleUrl: './child-room.component.scss'
 })
-export class ChildRoomComponent {
+export class ChildRoomComponent implements OnInit{
   @ViewChild('canvas', { static: true }) canvasRef: ElementRef<HTMLCanvasElement> | undefined;
   @ViewChild('colorInput') colorInput: ElementRef<HTMLInputElement> | undefined;
+  @ViewChild('videoEl') videoEl!: ElementRef<HTMLVideoElement>;
+  @ViewChild('debugCanvas') debugCanvas!: ElementRef<HTMLCanvasElement>;
+  @ViewChild('threeCanvas') threeCanvas!: ElementRef<HTMLCanvasElement>;
+
+  private src!: any;
+  private gray!: any;
+  private thresh!: any;
+  private streaming = false;
+  private animationId!: number;
+
+  private raycaster = new THREE.Raycaster();
+  private mouse = new THREE.Vector2();
+
+  bedModel: THREE.Group | undefined;
+  selectedObject: THREE.Object3D | null = null;
+  dragStart = new THREE.Vector2();
+  isDragging = false;
+  rotationAmount = 0;
 
   // Three.js properties
   scene: THREE.Scene | undefined;
@@ -246,21 +264,24 @@ export class ChildRoomComponent {
   loadBed() {
     const loader = new GLTFLoader();
     loader.load(
-      '/assets/glb/couch.glb', // Updated model path
-      (gltf) => {
-        const bed = gltf.scene;
-        this.scene?.add(bed);
+        '/assets/glb/bed.glb',
+        (gltf) => {
+          this.bedModel = gltf.scene;
+          this.scene?.add(this.bedModel);
 
-        bed.position.set(10, 2, 10);
-        bed.castShadow = true
-        bed.receiveShadow = true
-      },
-      (xhr) => {
-        console.log((xhr.loaded / xhr.total * 100) + '% loaded for bed');
-      },
-      (error) => {
-        console.error('Error loading model:', error);
-      }
+          this.bedModel.position.set(0, 2, 0);
+          this.bedModel.castShadow = true;
+          this.bedModel.receiveShadow = true;
+
+          // Ajouter le lit à la map des objets
+          this.objectsMap.set('bed', this.bedModel);
+        },
+        (xhr) => {
+          console.log((xhr.loaded / xhr.total * 100) + '% loaded for bed');
+        },
+        (error) => {
+          console.error('Error loading model:', error);
+        }
     );
   }
 
@@ -329,6 +350,21 @@ export class ChildRoomComponent {
     // Keyboard controls
     document.addEventListener('keydown', (event) => this.onKeyDown(event));
     document.addEventListener('keyup', (event) => this.onKeyUp(event));
+
+    this.renderer?.domElement.addEventListener('mousedown', (event) => this.onMouseDown(event));
+    document.addEventListener('mousemove', (event) => this.onMouseMove(event));
+    document.addEventListener('mouseup', () => this.onMouseUp());
+
+    // Ajouter un gestionnaire pour la rotation avec les touches R et T
+    document.addEventListener('keydown', (event) => {
+      if (this.isModificationMode && this.selectedObject) {
+        if (event.code === 'KeyR') {
+          this.rotateBed(-Math.PI / 16); // Rotation dans le sens anti-horaire
+        } else if (event.code === 'KeyT') {
+          this.rotateBed(Math.PI / 16); // Rotation dans le sens horaire
+        }
+      }
+    });
   }
 
   // Explicitly handle the click to start exploring
@@ -391,6 +427,81 @@ export class ChildRoomComponent {
       this.camera.updateProjectionMatrix();
     }
     this.renderer?.setSize(window.innerWidth, window.innerHeight);
+  }
+
+  onMouseDown(event: MouseEvent) {
+    if (!this.isModificationMode) return;
+
+    // Convertir les coordonnées de la souris en coordonnées normalisées (-1 à 1)
+    this.mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+    this.mouse.y = - (event.clientY / window.innerHeight) * 2 + 1;
+
+    // Lancer un rayon depuis la caméra
+    this.raycaster.setFromCamera(this.mouse, this.camera!);
+
+    // Vérifier si le lit est touché
+    const intersects = this.raycaster.intersectObject(this.bedModel!, true);
+
+    if (intersects.length > 0) {
+      // Désactiver les contrôles de caméra pendant le déplacement
+      if (this.controls?.isLocked) {
+        this.controls.unlock();
+      }
+
+      // @ts-ignore
+      this.selectedObject = this.bedModel;
+      this.isDragging = true;
+      this.dragStart.set(event.clientX, event.clientY);
+    }
+  }
+
+  onMouseMove(event: MouseEvent) {
+    if (!this.isModificationMode || !this.isDragging || !this.selectedObject) return;
+
+    // Calculer le déplacement de la souris
+    const deltaX = (event.clientX - this.dragStart.x) * 0.01;
+    const deltaZ = (event.clientY - this.dragStart.y) * 0.01;
+
+    // Déplacer l'objet dans le plan XZ en fonction de l'orientation de la caméra
+    this.moveObjectInCameraPlane(deltaX, deltaZ);
+
+    // Mettre à jour le point de départ pour le prochain mouvement
+    this.dragStart.set(event.clientX, event.clientY);
+  }
+
+  onMouseUp() {
+    this.isDragging = false;
+    this.selectedObject = null;
+  }
+
+  moveObjectInCameraPlane(deltaX: number, deltaZ: number) {
+    if (!this.selectedObject || !this.camera) return;
+
+    // Obtenir les vecteurs de direction de la caméra
+    const forward = new THREE.Vector3();
+    this.camera.getWorldDirection(forward);
+    forward.y = 0; // Restreindre au plan XZ
+    forward.normalize();
+
+    const right = new THREE.Vector3(-forward.z, 0, forward.x);
+
+    // Calculer le vecteur de déplacement
+    const movement = new THREE.Vector3()
+        .addScaledVector(right, deltaX)
+        .addScaledVector(forward, -deltaZ);
+
+    // Appliquer le déplacement
+    this.selectedObject.position.add(movement);
+  }
+
+  rotateBed(angle: number) {
+    if (!this.bedModel) return;
+
+    // Appliquer la rotation autour de l'axe Y
+    this.bedModel.rotation.y += angle;
+
+    // Mettre à jour la rotation totale pour référence
+    this.rotationAmount = (this.rotationAmount + angle) % (Math.PI * 2);
   }
 
   // Check for collisions with walls and objects
@@ -556,4 +667,6 @@ export class ChildRoomComponent {
 
     animateLoop();
   }
+
+  protected readonly Math = Math;
 }
