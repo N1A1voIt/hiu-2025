@@ -1,23 +1,19 @@
 <main>
   <section class="right">
-    <div class="pic">
+    <div class="pic relative">
       <div class="dzgn">
         <div class="top"></div>
-        <video autoplay loop muted>
-          <source src="/assets/video/note.mp4" type="video/mp4" />
-          <track kind="subtitles" srclang="fr" label="Français" />
-          <track kind="descriptions" srclang="fr" label="Descriptions" />
-          Votre navigateur ne supporte pas la lecture de vidéos.
-        </video>
+        <video #video width="480" height="360" autoplay></video>
+        <canvas #canvas width="480" height="360" style="display: none;"></canvas>
         <div class="bas"></div>
       </div>
+      <div (click)="capturePhoto()" class="rounded-full cursor-pointer border-black text-black bg-white border px-4 py-2 absolute bottom-2 left-4">
+        Log in
+      </div>
+      <div  class="rounded-full border-black text-black bg-white border px-4 py-2 absolute top-2 right-16">
+        Sign up
+      </div>
     </div>
-    <div class="text">
-      <h1>Dominez tous les terrains</h1>
-      <p>
-        Rejoignez-nous dès maintenant pour découvrir nos produits et rejoindre
-        une nouvelle génération de cyclistes !
-      </p>
-    </div>
+<!--    <ngx-spinner *ngIf="isLoading" type="ball-scale-multiple"></ngx-spinner>-->
   </section>
 </main>

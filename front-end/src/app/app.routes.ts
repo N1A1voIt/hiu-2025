@@ -13,7 +13,7 @@ export const routes: Routes = [
   { path: 'landing', component: LandingComponent },
   { path: 'room', component: CustomizableRoomComponent },
   { path: 'budget', component: BudgetComponent },
-  { path: 'login', component: LogineComponent },
+  { path: 'logine', component: LogineComponent },
   { path: '', redirectTo: 'landing', pathMatch: 'full' },
   {path:'drag',component:ClipboardComponent},
   {path:'child-room',component:ChildRoomComponent},
