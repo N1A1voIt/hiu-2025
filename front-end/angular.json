@@ -17,6 +17,10 @@
         "build": {
           "builder": "@angular-devkit/build-angular:application",
           "options": {
+            "allowedCommonJsDependencies": [
+              "@tensorflow/tfjs-core",
+              "face-api.js"
+            ],
             "outputPath": "dist/front-end",
             "index": "src/index.html",
             "browser": "src/main.ts",
@@ -36,10 +40,8 @@
             ],
             "scripts": [],
             "server": "src/main.server.ts",
-            "prerender": true,
-            "ssr": {
-              "entry": "server.ts"
-            }
+            "prerender": false,
+            "ssr": false
           },
           "configurations": {
             "production": {
@@ -108,6 +110,6 @@
     }
   },
   "cli": {
-    "analytics": "3501c0ea-2aab-4984-9257-c57c02039bff"
+    "analytics": "7d9a8b00-b8c1-488a-80e2-6bc607f4ce79"
   }
 }

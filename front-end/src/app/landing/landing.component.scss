@@ -24,6 +24,55 @@
   flex-direction: row;
   position: relative;
 }
+
+.landing .content .chat {
+  // max-width: 600px;
+  width: 23dvw;
+  margin: 40px auto;
+  background-color: #ffffff82;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  position: absolute;
+  height: 60dvh;
+  // overflow-y: scroll;
+}
+.landing .content .you,
+.landing .content .me {
+  margin-bottom: 15px;
+  display: flex;
+}
+.landing .content .you {
+  justify-content: flex-start;
+}
+.landing .content .me {
+  justify-content: flex-end;
+}
+.landing .content .you textarea,
+.landing .content .me textarea {
+  max-width: 80%;
+  padding: 10px 15px;
+  border-radius: 15px;
+  resize: none;
+  border: none;
+  font-size: 14px;
+  line-height: 1.4;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  outline: none;
+  overflow: hidden;
+  height: auto;
+  min-height: 60px;
+}
+
+.landing .content .you textarea {
+  background-color: #ffffff;
+  color: #333;
+}
+.landing .content .me textarea {
+  background-color: #fed2fb;
+  color: #333;
+}
+
 .landing .content .left {
   flex: 1;
   position: relative;
@@ -129,14 +178,17 @@ input:focus {
   justify-content: center;
   cursor: pointer;
 }
-.landing .content .down .safeP img {
+.landing .content .down .safeP * {
   padding: 20px;
   border-radius: 20px;
 }
 .landing .content .down .safeP {
   display: flex;
+  //width: 600px;
+  //height: 400px;
   flex-direction: column;
   align-items: center;
+  height: auto;
 }
 .landing .content .down .safeN {
   display: flex;

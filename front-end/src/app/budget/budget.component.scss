@@ -1,0 +1,65 @@
+.budget .info {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  top: 0;
+}
+
+.budget {
+  display: flex;
+  position: relative;
+}
+.budget .content {
+  display: flex;
+  position: absolute;
+  right: 40%;
+  top: 45%;
+}
+
+.budget .info .contenu {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.budget .info .contenu .chiffre {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+}
+
+.budget .info .contenu .chiffre p {
+  margin: 0;
+  color: white;
+  text-align: left;
+}
+
+.budget .info .contenu .chiffre h1 {
+  font-size: 3em;
+  font-weight: 600;
+  color: white;
+}
+
+.budget .info .contenu .chiffre h5 {
+  color: #9ef9b2;
+  text-align: right;
+  font-size: 1.5rem;
+  margin-top: 1rem;
+}
+.budget .info .contenu .plus {
+  position: absolute;
+  top: 0px;
+  right: 30px;
+  width: 50px;
+  height: 50px;
+  padding: 8px;
+  border-radius: 100%;
+  background-color: #060606;
+  border: 2px solid #ffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
