@@ -1,0 +1,49 @@
+.draggable {
+  width: 150px;
+  padding: 10px;
+  background-color: #4caf50;
+  color: white;
+  text-align: center;
+  border-radius: 8px;
+  cursor: grab;
+  user-select: none;
+  position: absolute;
+  top: 40%;
+  left: 40%;
+}
+
+.draggable:active {
+  cursor: grabbing;
+}
+.airdrop-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+.device-card {
+  background: #f0f0f0;
+  border-radius: 1rem;
+  padding: 1rem;
+  text-align: center;
+  width: 100px;
+  transition: transform 0.2s ease, box-shadow 0.3s ease;
+  cursor: pointer;
+}
+
+.device-card:hover {
+  transform: scale(1.1);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+}
+
+.device-icon {
+  font-size: 2rem;
+}
+
+.device-name {
+  margin-top: 0.5rem;
+  font-weight: bold;
+}
+
