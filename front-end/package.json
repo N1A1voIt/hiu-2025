@@ -19,6 +19,7 @@
     "@angular/forms": "^18.2.0",
     "@angular/platform-browser": "^18.2.0",
     "@angular/platform-browser-dynamic": "^18.2.0",
+    "@angular/platform-server": "^19.2.6",
     "@angular/router": "^18.2.0",
     "@angular/ssr": "^18.2.18",
     "@mediapipe/camera_utils": "^0.3.1675466862",
