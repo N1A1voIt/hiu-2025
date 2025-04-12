@@ -29,17 +29,13 @@ export class ChatService {
     };
 
     // Create HttpHeaders and set the Origin header
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-      'Origin': window.location.origin // Dynamically get the origin of your Angular app
-      // You could also hardcode the origin if it's always the same
-      // 'Origin': 'http://localhost:4200'
-    });
+    const httpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/x-www-form-urlencoded'
+      })
+    };
 
-    // Include the headers in the POST request options
-    const options = { headers: headers };
-
-    return this.http.post<IChat>(`${this.apiUrl}/run`, body, options);
+    return this.http.post<IChat>(`/api/run`, body, httpOptions);
   }
   sendMessageWithFile(text: string,file:string): Observable<IChat> {
     const body = {
@@ -71,6 +67,6 @@ export class ChatService {
     // Include the headers in the POST request options
     const options = { headers: headers };
 
-    return this.http.post<IChat>(`${this.apiUrl}/run`, body, options);
+    return this.http.post<IChat>(`/api/run`, body, options);
   }
 }
