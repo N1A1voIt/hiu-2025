@@ -51,7 +51,10 @@ export class StudyHelperComponent {
       this.convertFileToBase64(this.uploadedFile).then(base64String => {
         this.chatService.sendMessageWithFile(this.submittedText,file).subscribe({
           next: ( value) => {
-            this.responseText = value.text
+            this.responseText = value[0].content.parts[0].text;
+            this.displayedText = '';
+            this.typingIndex = 0;
+            this.typeText();
           }
         });
       });
@@ -59,16 +62,14 @@ export class StudyHelperComponent {
     else{
       this.chatService.sendMessage(this.submittedText).subscribe({
         next: ( value) => {
-          this.responseText = value.text
+          this.responseText = value[0].content.parts[0].text;
+          console.log('Response:', this.responseText);
+          this.displayedText = '';
+          this.typingIndex = 0;
+          this.typeText();
         }
       });
     }
-
-
-    this.displayedText = '';
-    this.typingIndex = 0;
-    this.typeText();
-
     console.log('Text:', this.inputText);
     this.inputText = '';
     this.uploadedFile = null;
