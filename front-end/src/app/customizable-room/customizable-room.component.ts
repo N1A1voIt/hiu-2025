@@ -1,4 +1,4 @@
-import {Component, ElementRef, NgZone, ViewChild} from '@angular/core';
+import {Component, ElementRef, Input, NgZone, numberAttribute, ViewChild} from '@angular/core';
 import {NgClass, NgIf} from '@angular/common';
 import * as THREE from 'three';
 import {PointerLockControls} from 'three/examples/jsm/controls/PointerLockControls.js';
@@ -26,6 +26,8 @@ import {StudyHelperComponent} from "../study-helper/study-helper.component";
 })
 export class CustomizableRoomComponent {
   @ViewChild('canvas', { static: true }) canvasRef: ElementRef<HTMLCanvasElement> | undefined;
+  @Input({transform: numberAttribute}) width: number = window.innerWidth;
+  @Input({transform: numberAttribute}) height: number = window.innerHeight;
 
   // Three.js properties
   scene: THREE.Scene | undefined;
@@ -119,7 +121,7 @@ export class CustomizableRoomComponent {
     // Camera setup - using perspective for first person view
     this.camera = new THREE.PerspectiveCamera(
         50,
-        window.innerWidth / window.innerHeight,
+        this.width/ this.height,
         0.5,
         100
     );
@@ -180,7 +182,7 @@ export class CustomizableRoomComponent {
       powerPreference: 'high-performance',
       precision: 'highp'
     });
-    this.renderer.setSize(window.innerWidth, window.innerHeight);
+    this.renderer.setSize(this.width, this.height);
     this.renderer.setPixelRatio(window.devicePixelRatio);
 
     // Add this to your initThree() method
