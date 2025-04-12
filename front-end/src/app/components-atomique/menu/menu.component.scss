@@ -3,9 +3,9 @@
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  border: 1px solid var(--fake-black);
+  border: 1px solid #0000;
   width: 95%;
-  background-color: var(--fake-white);
+  background-color: #fff;
 }
 .logo img {
   padding-left: 40px;
@@ -19,8 +19,8 @@
   text-decoration: none;
 }
 .navbar .hyperButton {
-  background-color: var(--red);
-  color: var(--fake-white);
+  background-color: red;
+  color: #fff;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -28,11 +28,11 @@
   font-family: Discognate, sans-serif;
   font-size: 1.7em;
   border: 1px solid transparent;
-  border-left: 1px solid var(--fake-black);
+  border-left: 1px solid #0000;
   cursor: pointer;
 }
 .navbar .hyperButton:hover {
-  background-color: var(--fake-white);
-  color: var(--red);
-  border: 1px solid var(--red);
+  background-color: #fff;
+  color: red;
+  border: 1px solid red;
 }
