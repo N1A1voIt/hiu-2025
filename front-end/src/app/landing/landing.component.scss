@@ -1,47 +1,47 @@
-.spotlight {
-  width: 98.9dvw;
-  height: 100dvh;
-  overflow: hidden;
-}
-.spotlight .bg {
+.landing {
   width: 100dvw;
   height: 100dvh;
-  overflow: hidden;
-}
-.spotlight .page1 .bg video {
-  width: 100%;
-  overflow: hidden;
-}
-.spotlight .page1 {
   position: relative;
+  overflow: hidden;
+}
+.landing .bg {
   width: 100dvw;
   height: 100dvh;
-}
-.spotlight .page1 .logo img {
   position: absolute;
-  width: 100px;
-  z-index: 1;
-  right: 50px;
-  bottom: 30px;
+  top: 0;
+  overflow: hidden;
+  z-index: -1;
 }
-/* Effet Hover sur page1 */
-.spotlight .page1 .text {
-  position: absolute;
-  width: 100px;
-  z-index: 1;
-  left: 50px;
-  bottom: 50px;
-  transition: bottom 0.5s ease;
+.landing .bg video {
+  width: 100%;
 }
-.spotlight .page1 .text h1 {
-  color: transparent;
-  font-family: Discognate, sans-serif;
-  font-size: 10em;
-  transition: color 0.3s ease;
+
+.landing .content {
+  padding: 50px;
+  width: 100dvw;
+  height: 100dvh;
+  display: flex;
+  flex-direction: row;
 }
-.spotlight .page1:hover .text {
-  bottom: 150px;
+.landing .content .left {
+  flex: 1;
 }
-.spotlight .page1:hover .text h1 {
-  color: var(--red);
+.landing .content .right {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  position: relative;
+}
+.landing .content .right .up {
+  border: 2px solid #ffff;
+  padding: 20px;
+  border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.landing .content h1 {
+  font-size: 2.5em;
+  color: #ffff;
 }
