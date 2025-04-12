@@ -10,6 +10,8 @@ import {MenuBurgerComponent} from "../components/menu-burger/menu-burger.compone
 import {ActionBtnComponent} from "../action-btn/action-btn.component";
 import {BrainComponent} from "../components/brain/brain.component";
 import {StudyHelperComponent} from "../study-helper/study-helper.component";
+import {HomeHeartComponent} from "../components/home-heart/home-heart.component";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-customizable-room',
@@ -97,7 +99,7 @@ export class CustomizableRoomComponent {
     console.log('rotateObject:', this.selectedObject.rotation);
   }
 
-  constructor(private ngZone: NgZone) {}
+  constructor(private ngZone: NgZone, private router: Router) {}
 
   ngOnInit() {
     this.initThree();
@@ -750,4 +752,5 @@ export class CustomizableRoomComponent {
   protected readonly PenSquareComponent = PenSquareComponent;
   protected readonly BrainComponent = BrainComponent;
   protected readonly EditComponent = EditComponent;
+  protected readonly HomeHeartComponent = HomeHeartComponent;
 }
