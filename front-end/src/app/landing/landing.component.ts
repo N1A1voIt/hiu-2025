@@ -19,7 +19,7 @@ export class LandingComponent {
     setTimeout(() => {
       this.isClicked = !this.isClicked;
       this.isAnimating = false;
-    }, 3000);
+    }, 300);
   }
   clickChat() {
     this.isAnimatingChat = true;
