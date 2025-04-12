@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, ViewChild, NgZone } from '@angular/core';
+import {Component, ElementRef, OnInit, ViewChild, NgZone, AfterViewInit} from '@angular/core';
 import {CommonModule, NgIf} from '@angular/common';
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
@@ -13,9 +13,27 @@ import { PointerLockControls } from 'three/examples/jsm/controls/PointerLockCont
   templateUrl: './child-room.component.html',
   styleUrl: './child-room.component.scss'
 })
-export class ChildRoomComponent {
+export class ChildRoomComponent implements OnInit{
   @ViewChild('canvas', { static: true }) canvasRef: ElementRef<HTMLCanvasElement> | undefined;
   @ViewChild('colorInput') colorInput: ElementRef<HTMLInputElement> | undefined;
+  @ViewChild('videoEl') videoEl!: ElementRef<HTMLVideoElement>;
+  @ViewChild('debugCanvas') debugCanvas!: ElementRef<HTMLCanvasElement>;
+  @ViewChild('threeCanvas') threeCanvas!: ElementRef<HTMLCanvasElement>;
+
+  private src!: any;
+  private gray!: any;
+  private thresh!: any;
+  private streaming = false;
+  private animationId!: number;
+
+  private raycaster = new THREE.Raycaster();
+  private mouse = new THREE.Vector2();
+
+  bedModel: THREE.Group | undefined;
+  selectedObject: THREE.Object3D | null = null;
+  dragStart = new THREE.Vector2();
+  isDragging = false;
+  rotationAmount = 0;
 
   // Three.js properties
   scene: THREE.Scene | undefined;
@@ -84,13 +102,54 @@ export class ChildRoomComponent {
     );
     this.camera.position.set(0, 5, 0); // Starting position at height 5
 
-    // Lighting
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+    // Replace the entire lighting section in your initThree() method with this:
+// Lighting setup with shadows
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.5); // Reduced ambient light intensity
     this.scene?.add(ambientLight);
 
-    const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
-    directionalLight.position.set(1, 1, 1);
+// Add directional light (sun-like) for main shadows
+    const directionalLight = new THREE.DirectionalLight(0xffffff, 1.5);
+    directionalLight.position.set(5, 10, 5);
+    directionalLight.castShadow = true;
+// Configure shadow properties for better quality
+    directionalLight.shadow.mapSize.width = 2048;
+    directionalLight.shadow.mapSize.height = 2048;
+    directionalLight.shadow.camera.near = 0.5;
+    directionalLight.shadow.camera.far = 50;
+    directionalLight.shadow.bias = -0.0005;
+
+// For directional light, set up the shadow camera frustum
+    directionalLight.shadow.camera.left = -15;
+    directionalLight.shadow.camera.right = 15;
+    directionalLight.shadow.camera.top = 15;
+    directionalLight.shadow.camera.bottom = -15;
     this.scene?.add(directionalLight);
+
+// Add a few point lights for more dynamic lighting
+    const pointLights = [
+      { position: [0, 7, 0], intensity: 1.2, distance: 20, shadowMapSize: 1024 },
+      { position: [5, 5, 5], intensity: 0.8, distance: 15, shadowMapSize: 1024 },
+      { position: [-5, 5, -5], intensity: 0.8, distance: 15, shadowMapSize: 1024 }
+    ];
+
+    pointLights.forEach(light => {
+      const pointLight = new THREE.PointLight(
+          0xffffff,
+          light.intensity,
+          light.distance
+      );
+      pointLight.position.set(light.position[0], light.position[1], light.position[2]);
+      pointLight.castShadow = true;
+      pointLight.shadow.mapSize.width = light.shadowMapSize;
+      pointLight.shadow.mapSize.height = light.shadowMapSize;
+      pointLight.shadow.bias = -0.0005;
+      this.scene?.add(pointLight);
+    });
+
+// Add a subtle hemisphere light for better global illumination
+    const hemiLight = new THREE.HemisphereLight(0xffffff, 0x404040, 0.6);
+    hemiLight.position.set(0, 10, 0);
+    this.scene?.add(hemiLight);
 
     // Renderer
     this.renderer = new THREE.WebGLRenderer({
@@ -102,6 +161,10 @@ export class ChildRoomComponent {
     this.renderer.setSize(window.innerWidth, window.innerHeight);
     this.renderer.setPixelRatio(window.devicePixelRatio);
 
+    // Add this to your initThree() method
+    this.renderer.shadowMap.enabled = true;
+    this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+
     // Controls
     this.controls = new PointerLockControls(this.camera, this.renderer.domElement);
 
@@ -110,12 +173,69 @@ export class ChildRoomComponent {
     this.scene?.add(gridHelper);
 
     window.addEventListener('resize', () => this.onWindowResize());
+
+    // this.renderer.outputEncoding = THREE.sRGBEncoding;
+  }
+
+  // Add this method to your component
+  updateMaterialsForLighting() {
+    if (!this.roomModel) return;
+
+    // Debug info
+    console.log("Updating materials for lighting...");
+
+    this.roomModel.traverse((object) => {
+      if (object instanceof THREE.Mesh) {
+        console.log(`Processing mesh: ${object.name}`);
+
+        // Helper function to update a material
+        const updateMaterial = (material: THREE.Material) => {
+          if (material instanceof THREE.MeshStandardMaterial) {
+            // Make sure material receives light properly
+            material.roughness = 0.7;
+            material.metalness = 0.1;
+
+            // Add emissive property to ensure minimum visibility
+            material.emissive.set(0x202020);
+
+            // Ensure the material updates
+            material.needsUpdate = true;
+
+            console.log(`Updated material for ${object.name}`);
+          } else if (material instanceof THREE.MeshBasicMaterial) {
+            // Convert to MeshStandardMaterial to respond to lighting
+            const color = material.color.clone();
+            const newMaterial = new THREE.MeshStandardMaterial({
+              color: '#0ff1f0',
+              roughness: 0.7,
+              metalness: 0.1,
+              emissive: new THREE.Color(0x202020)
+            });
+            return newMaterial;
+          }
+          return material;
+        };
+
+        // Handle both single materials and material arrays
+        if (Array.isArray(object.material)) {
+          object.material = object.material.map(updateMaterial);
+        } else if (object.material) {
+          object.material = updateMaterial(object.material);
+        }
+
+        // Ensure object receives shadows
+        object.castShadow = true;
+        object.receiveShadow = true;
+      }
+    });
+
+    console.log("Material update complete");
   }
 
   loadRoom() {
     const loader = new GLTFLoader();
     loader.load(
-      '/assets/glb/base_room.glb', // Updated model path
+      '/assets/glb/full_room.glb', // Updated model path
       (gltf) => {
         this.roomModel = gltf.scene;
         // @ts-ignore
@@ -130,6 +250,7 @@ export class ChildRoomComponent {
 
         // Process the model to set up colliders and identify walls
         this.setupRoom();
+        this.updateMaterialsForLighting();
       },
       (xhr) => {
         console.log((xhr.loaded / xhr.total * 100) + '% loaded');
@@ -143,21 +264,24 @@ export class ChildRoomComponent {
   loadBed() {
     const loader = new GLTFLoader();
     loader.load(
-      '/assets/glb/bed.glb', // Updated model path
-      (gltf) => {
-        const bed = gltf.scene;
-        this.scene?.add(bed);
+        '/assets/glb/bed.glb',
+        (gltf) => {
+          this.bedModel = gltf.scene;
+          this.scene?.add(this.bedModel);
 
-        bed.position.set(0, 2, 0);
-        bed.castShadow = true
-        bed.receiveShadow = true
-      },
-      (xhr) => {
-        console.log((xhr.loaded / xhr.total * 100) + '% loaded for bed');
-      },
-      (error) => {
-        console.error('Error loading model:', error);
-      }
+          this.bedModel.position.set(0, 2, 0);
+          this.bedModel.castShadow = true;
+          this.bedModel.receiveShadow = true;
+
+          // Ajouter le lit à la map des objets
+          this.objectsMap.set('bed', this.bedModel);
+        },
+        (xhr) => {
+          console.log((xhr.loaded / xhr.total * 100) + '% loaded for bed');
+        },
+        (error) => {
+          console.error('Error loading model:', error);
+        }
     );
   }
 
@@ -166,6 +290,21 @@ export class ChildRoomComponent {
     // @ts-ignore
     this.loadBed();
     this.roomModel?.traverse((object) => {
+      // if (object instanceof THREE.Mesh) {
+      //   if (Array.isArray(object.material)) {
+      //     object.material.forEach(mat => {
+      //       if (mat instanceof THREE.MeshStandardMaterial || mat instanceof THREE.MeshPhongMaterial) {
+      //         mat.emissive.set(0x111111); // Slight self-illumination
+      //         mat.needsUpdate = true;
+      //       }
+      //     });
+      //   } else if (object.material instanceof THREE.MeshStandardMaterial ||
+      //       object.material instanceof THREE.MeshPhongMaterial) {
+      //     object.material.emissive.set(0x111111);
+      //     object.material.needsUpdate = true;
+      //   }
+      // }
+
       // Store object by name for later material modifications
       if (object.name) {
         this.objectsMap.set(object.name, object);
@@ -211,6 +350,21 @@ export class ChildRoomComponent {
     // Keyboard controls
     document.addEventListener('keydown', (event) => this.onKeyDown(event));
     document.addEventListener('keyup', (event) => this.onKeyUp(event));
+
+    this.renderer?.domElement.addEventListener('mousedown', (event) => this.onMouseDown(event));
+    document.addEventListener('mousemove', (event) => this.onMouseMove(event));
+    document.addEventListener('mouseup', () => this.onMouseUp());
+
+    // Ajouter un gestionnaire pour la rotation avec les touches R et T
+    document.addEventListener('keydown', (event) => {
+      if (this.isModificationMode && this.selectedObject) {
+        if (event.code === 'KeyR') {
+          this.rotateBed(-Math.PI / 16); // Rotation dans le sens anti-horaire
+        } else if (event.code === 'KeyT') {
+          this.rotateBed(Math.PI / 16); // Rotation dans le sens horaire
+        }
+      }
+    });
   }
 
   // Explicitly handle the click to start exploring
@@ -273,6 +427,81 @@ export class ChildRoomComponent {
       this.camera.updateProjectionMatrix();
     }
     this.renderer?.setSize(window.innerWidth, window.innerHeight);
+  }
+
+  onMouseDown(event: MouseEvent) {
+    if (!this.isModificationMode) return;
+
+    // Convertir les coordonnées de la souris en coordonnées normalisées (-1 à 1)
+    this.mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+    this.mouse.y = - (event.clientY / window.innerHeight) * 2 + 1;
+
+    // Lancer un rayon depuis la caméra
+    this.raycaster.setFromCamera(this.mouse, this.camera!);
+
+    // Vérifier si le lit est touché
+    const intersects = this.raycaster.intersectObject(this.bedModel!, true);
+
+    if (intersects.length > 0) {
+      // Désactiver les contrôles de caméra pendant le déplacement
+      if (this.controls?.isLocked) {
+        this.controls.unlock();
+      }
+
+      // @ts-ignore
+      this.selectedObject = this.bedModel;
+      this.isDragging = true;
+      this.dragStart.set(event.clientX, event.clientY);
+    }
+  }
+
+  onMouseMove(event: MouseEvent) {
+    if (!this.isModificationMode || !this.isDragging || !this.selectedObject) return;
+
+    // Calculer le déplacement de la souris
+    const deltaX = (event.clientX - this.dragStart.x) * 0.01;
+    const deltaZ = (event.clientY - this.dragStart.y) * 0.01;
+
+    // Déplacer l'objet dans le plan XZ en fonction de l'orientation de la caméra
+    this.moveObjectInCameraPlane(deltaX, deltaZ);
+
+    // Mettre à jour le point de départ pour le prochain mouvement
+    this.dragStart.set(event.clientX, event.clientY);
+  }
+
+  onMouseUp() {
+    this.isDragging = false;
+    this.selectedObject = null;
+  }
+
+  moveObjectInCameraPlane(deltaX: number, deltaZ: number) {
+    if (!this.selectedObject || !this.camera) return;
+
+    // Obtenir les vecteurs de direction de la caméra
+    const forward = new THREE.Vector3();
+    this.camera.getWorldDirection(forward);
+    forward.y = 0; // Restreindre au plan XZ
+    forward.normalize();
+
+    const right = new THREE.Vector3(-forward.z, 0, forward.x);
+
+    // Calculer le vecteur de déplacement
+    const movement = new THREE.Vector3()
+        .addScaledVector(right, deltaX)
+        .addScaledVector(forward, -deltaZ);
+
+    // Appliquer le déplacement
+    this.selectedObject.position.add(movement);
+  }
+
+  rotateBed(angle: number) {
+    if (!this.bedModel) return;
+
+    // Appliquer la rotation autour de l'axe Y
+    this.bedModel.rotation.y += angle;
+
+    // Mettre à jour la rotation totale pour référence
+    this.rotationAmount = (this.rotationAmount + angle) % (Math.PI * 2);
   }
 
   // Check for collisions with walls and objects
@@ -438,4 +667,6 @@ export class ChildRoomComponent {
 
     animateLoop();
   }
+
+  protected readonly Math = Math;
 }

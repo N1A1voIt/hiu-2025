@@ -1,0 +1,38 @@
+.navbar {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  border: 1px solid #0000;
+  width: 95%;
+  background-color: #fff;
+}
+.logo img {
+  padding-left: 40px;
+  width: 50px;
+}
+.navbar nav {
+  display: flex;
+  gap: 40px;
+}
+.navbar a {
+  text-decoration: none;
+}
+.navbar .hyperButton {
+  background-color: red;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 15px 50px;
+  font-family: Discognate, sans-serif;
+  font-size: 1.7em;
+  border: 1px solid transparent;
+  border-left: 1px solid #0000;
+  cursor: pointer;
+}
+.navbar .hyperButton:hover {
+  background-color: #fff;
+  color: red;
+  border: 1px solid red;
+}

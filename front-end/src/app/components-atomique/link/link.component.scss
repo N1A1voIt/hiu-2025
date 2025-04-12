@@ -1,0 +1,23 @@
+.alink {
+  color: var(--fake-black);
+  text-decoration: none;
+  font-size: 0.7em;
+  position: relative;
+}
+
+.alink::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background-color: var(--fake-black);
+  transform-origin: right center;
+  transform: scaleX(0);
+  transition: transform 0.3s ease;
+}
+
+.alink:hover::after {
+  transform: scaleX(1);
+}

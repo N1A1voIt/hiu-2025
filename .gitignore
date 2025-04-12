@@ -1,5 +1,8 @@
 
 /.idea
 /back-end/.idea
-
 /back-end/models
+/back-end/.venv
+/back-end/.idea
+/google-adk/.venv
+/google-adk/.idea

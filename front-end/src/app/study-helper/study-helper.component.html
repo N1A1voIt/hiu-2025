@@ -1,0 +1,39 @@
+<div
+  class="bg-[#ffffff20] backdrop-blur-[8px] border border-white flex flex-col p-6 rounded-xl flex-grow text-white text-center"
+>
+  <h2 class="text-3xl font-bold">Mazotoa mianatra!</h2>
+  <div class="my-2">
+    <div class="text-left">
+      <p class="p-6 whitespace-pre-wrap font-mono" *ngIf="displayedText">
+        {{ displayedText }}<span class="animate-pulse">|</span>
+      </p>
+    </div>
+    <div class="flex items-center">
+      <label for="fileUpload" class="cursor-pointer p-4">
+        <app-file-clip color="#fff" size="30px"></app-file-clip>
+      </label>
+      <input
+        type="file"
+        id="fileUpload"
+        class="hidden"
+        (change)="onFileSelected($event)"
+      />
+      <textarea
+        #textArea
+        [(ngModel)]="inputText"
+        placeholder="Inona no azoko hanampiana anao?"
+        class="bg-transparent border border-white rounded-md p-2 flex-grow mr-2 text-white placeholder-white focus:ring-transparent min-w-[500px] mt-2 resize-none overflow-hidden focus:outline-none focus:shadow-none"
+        (input)="autoResize()"
+      ></textarea>
+    </div>
+    <div *ngIf="uploadedFile" class="mt-4">
+      <p>Fichier : {{ uploadedFile?.name }}</p>
+    </div>
+    <button
+      (click)="onSubmit()"
+      class="bg-terracotta hover:bg-darkOrange text-white py-2 px-4 rounded-lg mt-6 shadow-xl w-200px"
+    >
+      Alefa
+    </button>
+  </div>
+</div>
