@@ -27,7 +27,7 @@
       ></textarea>
     </div>
     <div *ngIf="uploadedFile" class="mt-4">
-      <p>Fichier : {{ uploadedFile?.name }}</p>
+      <p>Fichier : {{ uploadedFile.name }}</p>
     </div>
     <button
       (click)="onSubmit()"

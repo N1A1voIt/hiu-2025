@@ -23,8 +23,7 @@
         </div>
         <div class="chiffre">
           <p>Expense</p>
-          <h1>500 000Ar</h1>
-          <h5>-50%</h5>
+          <h1>{{ totalExpenses }}</h1>
         </div>
         <div class="plus">
           <!-- <svg width="100px" height="100px">
@@ -49,70 +48,10 @@
           </tr>
         </thead>
         <tbody class="text-sm">
-          <tr class="hover:bg-white/10 transition">
+          <tr *ngFor="let b of budgets" class="hover:bg-white/10 transition">
             <td class="py-2">13/04/2025</td>
-            <td class="py-2">Ordinateur portable</td>
-            <td class="py-2">1 200 000 Ar</td>
-          </tr>
-          <tr class="hover:bg-white/10 transition">
-            <td class="py-2">12/04/2025</td>
-            <td class="py-2">Chaise ergonomique</td>
-            <td class="py-2">350 000 Ar</td>
-          </tr>
-          <tr class="hover:bg-white/10 transition">
-            <td class="py-2">10/04/2025</td>
-            <td class="py-2">Clavier mécanique</td>
-            <td class="py-2">250 000 Ar</td>
-          </tr>
-          <tr class="hover:bg-white/10 transition">
-            <td class="py-2">08/04/2025</td>
-            <td class="py-2">Souris sans fil</td>
-            <td class="py-2">120 000 Ar</td>
-          </tr>
-          <tr class="hover:bg-white/10 transition">
-            <td class="py-2">05/04/2025</td>
-            <td class="py-2">Écouteurs Bluetooth</td>
-            <td class="py-2">180 000 Ar</td>
-          </tr>
-          <tr class="hover:bg-white/10 transition">
-            <td class="py-2">13/04/2025</td>
-            <td class="py-2">Ordinateur portable</td>
-            <td class="py-2">1 200 000 Ar</td>
-          </tr>
-          <tr class="hover:bg-white/10 transition">
-            <td class="py-2">12/04/2025</td>
-            <td class="py-2">Chaise ergonomique</td>
-            <td class="py-2">350 000 Ar</td>
-          </tr>
-          <tr class="hover:bg-white/10 transition">
-            <td class="py-2">10/04/2025</td>
-            <td class="py-2">Clavier mécanique</td>
-            <td class="py-2">250 000 Ar</td>
-          </tr>
-          <tr class="hover:bg-white/10 transition">
-            <td class="py-2">08/04/2025</td>
-            <td class="py-2">Souris sans fil</td>
-            <td class="py-2">120 000 Ar</td>
-          </tr>
-          <tr class="hover:bg-white/10 transition">
-            <td class="py-2">05/04/2025</td>
-            <td class="py-2">Écouteurs Bluetooth</td>
-            <td class="py-2">180 000 Ar</td>
-          </tr>
-          <tr class="hover:bg-white/10 transition">
-            <td class="py-2">10/04/2025</td>
-            <td class="py-2">Clavier mécanique</td>
-            <td class="py-2">250 000 Ar</td>
-          </tr>
-          <tr class="hover:bg-white/10 transition">
-            <td class="py-2">08/04/2025</td>
-            <td class="py-2">Souris sans fil</td>
-            <td class="py-2">120 000 Ar</td>
-          </tr>
-          <tr class="hover:bg-white/10 transition">
-            <td class="py-2">05/04/2025</td>
-            <td class="py-2">Écouteurs Bluetooth</td>
-            <td class="py-2">180 000 Ar</td>
+            <td class="py-2">{{ b.title }}</td>
+            <td class="py-2">{{ b.total | currency}}</td>
           </tr>
         </tbody>
       </table>
