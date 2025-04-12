@@ -1,0 +1,151 @@
+main {
+  background: var(--mid-purple);
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+article {
+  background: var(--black);
+  width: 80%;
+  height: 90%;
+  border-radius: 40px;
+}
+article section {
+  display: flex;
+  padding: 10px;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  border-radius: 40px;
+  position: relative;
+}
+.left {
+  position: relative;
+  overflow: hidden;
+  background: var(--mid-purple);
+  padding: 10px;
+  border-radius: 35px;
+  flex: 1;
+  height: 555px;
+  display: flex;
+  align-items: left;
+  justify-content: center;
+  flex-direction: column;
+}
+.content {
+  padding: 50px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.content p {
+  font-size: 0.7em;
+  color: var(--white);
+  z-index: 1;
+}
+.accroche {
+  display: flex;
+  flex-direction: column;
+  gap: 0px;
+  padding-bottom: 0px;
+  z-index: 1;
+}
+.accroche span {
+  color: var(--white);
+  font-size: 2.5em;
+  white-space: nowrap;
+}
+.buttons {
+  display: flex;
+  justify-content: left;
+  gap: 50px;
+  z-index: 1;
+}
+.other_option {
+  background: transparent;
+  border: 2px solid var(--white);
+  color: var(--white);
+  padding: 10px 50px;
+  border-radius: 30px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+.other_option::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 300%;
+  height: 300%;
+  background-color: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  transition: all 0.5s ease;
+  transform: translate(-50%, -50%) scale(0);
+}
+
+.other_option:hover::before {
+  transform: translate(-50%, -50%) scale(2);
+}
+.choose_me {
+  background: var(--white);
+  border: none;
+  color: var(--mid-purple);
+  padding: 10px 50px;
+  border-radius: 30px;
+  transition: box-shadow 0.3s ease;
+}
+
+.choose_me:hover {
+  box-shadow: 0 0 10px 5px var(--light-purple);
+}
+.holo {
+  position: absolute;
+  bottom: -60px;
+  left: -50px;
+}
+.holo img {
+  width: 300px;
+}
+.cercles {
+  position: absolute;
+  left: 350px;
+}
+.grand {
+  width: 400px;
+  height: 400px;
+  background: var(--black);
+  border-radius: 500px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.petit {
+  width: 200px;
+  height: 200px;
+  background: var(--mid-purple);
+  border-radius: 500px;
+}
+.right {
+  flex: 1;
+}
+.threed {
+  position: absolute;
+  width: 1200px;
+  top: 2px;
+  left: 75px;
+}
+.link {
+  position: absolute;
+  bottom: 50px;
+  right: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.link i {
+  font-size: 1.2em;
+  color: var(--white);
+}
