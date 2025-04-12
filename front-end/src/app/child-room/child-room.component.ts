@@ -84,13 +84,54 @@ export class ChildRoomComponent {
     );
     this.camera.position.set(0, 5, 0); // Starting position at height 5
 
-    // Lighting
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+    // Replace the entire lighting section in your initThree() method with this:
+// Lighting setup with shadows
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.5); // Reduced ambient light intensity
     this.scene?.add(ambientLight);
 
-    const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
-    directionalLight.position.set(1, 1, 1);
+// Add directional light (sun-like) for main shadows
+    const directionalLight = new THREE.DirectionalLight(0xffffff, 1.5);
+    directionalLight.position.set(5, 10, 5);
+    directionalLight.castShadow = true;
+// Configure shadow properties for better quality
+    directionalLight.shadow.mapSize.width = 2048;
+    directionalLight.shadow.mapSize.height = 2048;
+    directionalLight.shadow.camera.near = 0.5;
+    directionalLight.shadow.camera.far = 50;
+    directionalLight.shadow.bias = -0.0005;
+
+// For directional light, set up the shadow camera frustum
+    directionalLight.shadow.camera.left = -15;
+    directionalLight.shadow.camera.right = 15;
+    directionalLight.shadow.camera.top = 15;
+    directionalLight.shadow.camera.bottom = -15;
     this.scene?.add(directionalLight);
+
+// Add a few point lights for more dynamic lighting
+    const pointLights = [
+      { position: [0, 7, 0], intensity: 1.2, distance: 20, shadowMapSize: 1024 },
+      { position: [5, 5, 5], intensity: 0.8, distance: 15, shadowMapSize: 1024 },
+      { position: [-5, 5, -5], intensity: 0.8, distance: 15, shadowMapSize: 1024 }
+    ];
+
+    pointLights.forEach(light => {
+      const pointLight = new THREE.PointLight(
+          0xffffff,
+          light.intensity,
+          light.distance
+      );
+      pointLight.position.set(light.position[0], light.position[1], light.position[2]);
+      pointLight.castShadow = true;
+      pointLight.shadow.mapSize.width = light.shadowMapSize;
+      pointLight.shadow.mapSize.height = light.shadowMapSize;
+      pointLight.shadow.bias = -0.0005;
+      this.scene?.add(pointLight);
+    });
+
+// Add a subtle hemisphere light for better global illumination
+    const hemiLight = new THREE.HemisphereLight(0xffffff, 0x404040, 0.6);
+    hemiLight.position.set(0, 10, 0);
+    this.scene?.add(hemiLight);
 
     // Renderer
     this.renderer = new THREE.WebGLRenderer({
@@ -102,6 +143,10 @@ export class ChildRoomComponent {
     this.renderer.setSize(window.innerWidth, window.innerHeight);
     this.renderer.setPixelRatio(window.devicePixelRatio);
 
+    // Add this to your initThree() method
+    this.renderer.shadowMap.enabled = true;
+    this.renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+
     // Controls
     this.controls = new PointerLockControls(this.camera, this.renderer.domElement);
 
@@ -110,12 +155,69 @@ export class ChildRoomComponent {
     this.scene?.add(gridHelper);
 
     window.addEventListener('resize', () => this.onWindowResize());
+
+    // this.renderer.outputEncoding = THREE.sRGBEncoding;
+  }
+
+  // Add this method to your component
+  updateMaterialsForLighting() {
+    if (!this.roomModel) return;
+
+    // Debug info
+    console.log("Updating materials for lighting...");
+
+    this.roomModel.traverse((object) => {
+      if (object instanceof THREE.Mesh) {
+        console.log(`Processing mesh: ${object.name}`);
+
+        // Helper function to update a material
+        const updateMaterial = (material: THREE.Material) => {
+          if (material instanceof THREE.MeshStandardMaterial) {
+            // Make sure material receives light properly
+            material.roughness = 0.7;
+            material.metalness = 0.1;
+
+            // Add emissive property to ensure minimum visibility
+            material.emissive.set(0x202020);
+
+            // Ensure the material updates
+            material.needsUpdate = true;
+
+            console.log(`Updated material for ${object.name}`);
+          } else if (material instanceof THREE.MeshBasicMaterial) {
+            // Convert to MeshStandardMaterial to respond to lighting
+            const color = material.color.clone();
+            const newMaterial = new THREE.MeshStandardMaterial({
+              color: '#0ff1f0',
+              roughness: 0.7,
+              metalness: 0.1,
+              emissive: new THREE.Color(0x202020)
+            });
+            return newMaterial;
+          }
+          return material;
+        };
+
+        // Handle both single materials and material arrays
+        if (Array.isArray(object.material)) {
+          object.material = object.material.map(updateMaterial);
+        } else if (object.material) {
+          object.material = updateMaterial(object.material);
+        }
+
+        // Ensure object receives shadows
+        object.castShadow = true;
+        object.receiveShadow = true;
+      }
+    });
+
+    console.log("Material update complete");
   }
 
   loadRoom() {
     const loader = new GLTFLoader();
     loader.load(
-      '/assets/glb/base_room.glb', // Updated model path
+      '/assets/glb/full_room.glb', // Updated model path
       (gltf) => {
         this.roomModel = gltf.scene;
         // @ts-ignore
@@ -130,6 +232,7 @@ export class ChildRoomComponent {
 
         // Process the model to set up colliders and identify walls
         this.setupRoom();
+        this.updateMaterialsForLighting();
       },
       (xhr) => {
         console.log((xhr.loaded / xhr.total * 100) + '% loaded');
@@ -143,12 +246,12 @@ export class ChildRoomComponent {
   loadBed() {
     const loader = new GLTFLoader();
     loader.load(
-      '/assets/glb/bed.glb', // Updated model path
+      '/assets/glb/couch.glb', // Updated model path
       (gltf) => {
         const bed = gltf.scene;
         this.scene?.add(bed);
 
-        bed.position.set(0, 2, 0);
+        bed.position.set(10, 2, 10);
         bed.castShadow = true
         bed.receiveShadow = true
       },
@@ -166,6 +269,21 @@ export class ChildRoomComponent {
     // @ts-ignore
     this.loadBed();
     this.roomModel?.traverse((object) => {
+      // if (object instanceof THREE.Mesh) {
+      //   if (Array.isArray(object.material)) {
+      //     object.material.forEach(mat => {
+      //       if (mat instanceof THREE.MeshStandardMaterial || mat instanceof THREE.MeshPhongMaterial) {
+      //         mat.emissive.set(0x111111); // Slight self-illumination
+      //         mat.needsUpdate = true;
+      //       }
+      //     });
+      //   } else if (object.material instanceof THREE.MeshStandardMaterial ||
+      //       object.material instanceof THREE.MeshPhongMaterial) {
+      //     object.material.emissive.set(0x111111);
+      //     object.material.needsUpdate = true;
+      //   }
+      // }
+
       // Store object by name for later material modifications
       if (object.name) {
         this.objectsMap.set(object.name, object);
