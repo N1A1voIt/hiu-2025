@@ -3,19 +3,30 @@ import {NgIf} from '@angular/common';
 import * as THREE from 'three';
 import {PointerLockControls} from 'three/examples/jsm/controls/PointerLockControls.js';
 import {GLTFLoader} from 'three/examples/jsm/loaders/GLTFLoader.js';
+import {EditComponent} from "../components/edit/edit.component";
+import {FermerComponent} from "../components/fermer/fermer.component";
+import {PenSquareComponent} from "../components/pen-square/pen-square.component";
+import {MenuBurgerComponent} from "../components/menu-burger/menu-burger.component";
+import {ActionBtnComponent} from "../action-btn/action-btn.component";
+import {BrainComponent} from "../components/brain/brain.component";
 
 @Component({
   selector: 'app-customizable-room',
   standalone: true,
   imports: [
-    NgIf
+    NgIf,
+    ActionBtnComponent,
+    EditComponent,
+    FermerComponent,
+    PenSquareComponent,
+    MenuBurgerComponent,
+    ActionBtnComponent
   ],
   templateUrl: './customizable-room.component.html',
   styleUrl: './customizable-room.component.scss'
 })
 export class CustomizableRoomComponent {
   @ViewChild('canvas', { static: true }) canvasRef: ElementRef<HTMLCanvasElement> | undefined;
-  @ViewChild('colorInput') colorInput: ElementRef<HTMLInputElement> | undefined;
 
   // Three.js properties
   scene: THREE.Scene | undefined;
@@ -46,16 +57,36 @@ export class CustomizableRoomComponent {
   frontWall: THREE.Mesh | undefined;
   rightWall: THREE.Mesh | undefined;
 
-  // Color picker state
-  colorPickerVisible = false;
-
+  // Edit mode
   isModificationMode: boolean = false;
+  selectedObject: THREE.Object3D | null = null;
+  isDragging = false;
+  dragStart = new THREE.Vector2();
+  raycaster = new THREE.Raycaster();
+  mouse = new THREE.Vector2();
 
-  camHeight: number = 3;
+  camHeight: number = 8;
 
-  toggleModificationMode() {
+  toggleModificationMode = () => {
     this.isModificationMode = !this.isModificationMode;
     console.log('Modification mode:', this.isModificationMode ? 'ON' : 'OFF');
+
+    // If we're exiting modification mode, deselect the object
+    if (!this.isModificationMode) {
+      this.selectedObject = null;
+    }
+
+    // Toggle controls based on the mode
+    if (this.isModificationMode) {
+      this.controls?.unlock();
+    }
+  }
+
+  rotateObject(angle: number) {
+    if (!this.selectedObject) return;
+
+    // Apply rotation around the Y axis
+    this.selectedObject.rotation.y += angle;
   }
 
   constructor(private ngZone: NgZone) {}
@@ -82,10 +113,10 @@ export class CustomizableRoomComponent {
 
     // Camera setup - using perspective for first person view
     this.camera = new THREE.PerspectiveCamera(
-      50,
-      window.innerWidth / window.innerHeight,
-      0.5,
-      100
+        50,
+        window.innerWidth / window.innerHeight,
+        0.5,
+        100
     );
     this.camera.position.set(0, this.camHeight, 0); // Starting position at height 5
 
@@ -120,9 +151,9 @@ export class CustomizableRoomComponent {
 
     pointLights.forEach(light => {
       const pointLight = new THREE.PointLight(
-        0xffffff,
-        light.intensity,
-        light.distance
+          0xffffff,
+          light.intensity,
+          light.distance
       );
       pointLight.position.set(light.position[0], light.position[1], light.position[2]);
       pointLight.castShadow = true;
@@ -154,16 +185,9 @@ export class CustomizableRoomComponent {
     // Controls
     this.controls = new PointerLockControls(this.camera, this.renderer.domElement);
 
-    // Add helpers for development
-    // const gridHelper = new THREE.GridHelper(20, 20);
-    // this.scene?.add(gridHelper);
-
     window.addEventListener('resize', () => this.onWindowResize());
-
-    // this.renderer.outputEncoding = THREE.sRGBEncoding;
   }
 
-  // Add this method to your component
   updateMaterialsForLighting() {
     if (!this.roomModel) return;
 
@@ -221,29 +245,29 @@ export class CustomizableRoomComponent {
   loadRoom() {
     const loader = new GLTFLoader();
     loader.load(
-      '/assets/glb/full_room.glb', // Updated model path
-      (gltf) => {
-        this.roomModel = gltf.scene;
-        // @ts-ignore
-        this.scene?.add(this.roomModel);
+        '/assets/glb/room_rock.glb', // Updated model path
+        (gltf) => {
+          this.roomModel = gltf.scene;
+          // @ts-ignore
+          this.scene?.add(this.roomModel);
 
-        gltf.scene.rotation.set(0, 0, 0); // Reset rotation
-        gltf.scene.position.set(0, 0, 0); // Center the model
+          gltf.scene.rotation.set(0, 0, 0); // Reset rotation
+          gltf.scene.position.set(0, 0, 0); // Center the model
 
-        // Set camera position and lookAt with updated Y values
-        this.camera?.position.set(1, this.camHeight, 1);
-        this.camera?.lookAt(0, this.camHeight, 0);
+          // Set camera position and lookAt with updated Y values
+          this.camera?.position.set(1, this.camHeight, 1);
+          this.camera?.lookAt(0, this.camHeight, 0);
 
-        // Process the model to set up colliders and identify walls
-        this.setupRoom();
-        this.updateMaterialsForLighting();
-      },
-      (xhr) => {
-        console.log((xhr.loaded / xhr.total * 100) + '% loaded');
-      },
-      (error) => {
-        console.error('Error loading model:', error);
-      }
+          // Process the model to set up colliders and identify walls
+          this.setupRoom();
+          this.updateMaterialsForLighting();
+        },
+        (xhr) => {
+          console.log((xhr.loaded / xhr.total * 100) + '% loaded');
+        },
+        (error) => {
+          console.error('Error loading model:', error);
+        }
     );
   }
 
@@ -255,56 +279,58 @@ export class CustomizableRoomComponent {
     const modelPath = `/assets/glb/${modelName}.glb`;
 
     loader.load(
-      modelPath,
-      (gltf) => {
-        const model = gltf.scene;
+        modelPath,
+        (gltf) => {
+          const model = gltf.scene;
 
-        // Apply position, scale and rotation
-        model.position.copy(position);
-        model.scale.copy(scale);
-        model.rotation.copy(rotation);
+          // Apply position, scale and rotation
+          model.position.copy(position);
+          model.scale.copy(scale);
+          model.rotation.copy(rotation);
 
-        // Apply shadows to all meshes in the model
-        model.traverse((object) => {
-          if (object instanceof THREE.Mesh) {
-            object.castShadow = true;
-            object.receiveShadow = true;
+          // Set a unique name for the entire model to make it identifiable
+          model.name = `${modelName}_${Date.now()}`;
 
-            // Add mesh to colliders array
-            this.colliders.push(object);
+          // Apply shadows to all meshes in the model
+          model.traverse((object) => {
+            if (object instanceof THREE.Mesh) {
+              object.castShadow = true;
+              object.receiveShadow = true;
 
-            // Store in objectsMap for later material modifications
-            if (object.name) {
-              this.objectsMap.set(object.name, object);
-              console.log(`Added collision object: ${object.name} from model: ${modelName}`);
+              // Add mesh to colliders array if it's not a wall (we don't want to move walls)
+              if (!object.name.includes('Wall') && !object.name.includes('Floor')) {
+                this.colliders.push(object);
+              }
+
+              // Store in objectsMap for later material modifications
+              if (object.name) {
+                this.objectsMap.set(object.name, object);
+                console.log(`Added object: ${object.name} from model: ${modelName}`);
+              }
             }
-          }
-        });
+          });
 
-        // Add to scene
-        this.scene?.add(model);
-        console.log(`Loaded model: ${modelName} at position:`, position);
-      },
-      (xhr) => {
-        console.log(`${modelName}: ${(xhr.loaded / xhr.total * 100).toFixed(2)}% loaded`);
-      },
-      (error) => {
-        console.error(`Error loading model ${modelName}:`, error);
-      }
+          // Store the whole model in our objectsMap for selection
+          this.objectsMap.set(model.name, model);
+
+          // Add to scene
+          this.scene?.add(model);
+          console.log(`Loaded model: ${modelName} at position:`, position);
+        },
+        (xhr) => {
+          console.log(`${modelName}: ${(xhr.loaded / xhr.total * 100).toFixed(2)}% loaded`);
+        },
+        (error) => {
+          console.error(`Error loading model ${modelName}:`, error);
+        }
     );
   }
 
   setupRoom() {
-    // Process all objects in the room
-    // @ts-ignore
-    // this.loadBed();
     this.scene?.traverse((object) => {
-
       // Store object by name for later material modifications
       if (object.name) {
         this.objectsMap.set(object.name, object);
-
-        // Log available objects during setup for debugging
         console.log('Found object:', object.name);
       }
 
@@ -317,7 +343,11 @@ export class CustomizableRoomComponent {
         else if (object.name === 'RightWall') {
           this.rightWall = object;
         }
-        this.colliders.push(object);
+
+        // Only add walls and floors to colliders, movable objects will be added separately
+        if (object.name.includes('Wall') || object.name.includes('Floor')) {
+          this.colliders.push(object);
+        }
       }
     });
   }
@@ -339,12 +369,28 @@ export class CustomizableRoomComponent {
     // Keyboard controls
     document.addEventListener('keydown', (event) => this.onKeyDown(event));
     document.addEventListener('keyup', (event) => this.onKeyUp(event));
+
+    // Mouse events for object selection and manipulation
+    this.renderer?.domElement.addEventListener('mousedown', (event) => this.onMouseDown(event));
+    document.addEventListener('mousemove', (event) => this.onMouseMove(event));
+    document.addEventListener('mouseup', () => this.onMouseUp());
+
+    // Keyboard shortcuts for rotation in edit mode
+    document.addEventListener('keydown', (event) => {
+      if (this.isModificationMode && this.selectedObject) {
+        if (event.code === 'KeyR') {
+          this.rotateObject(-Math.PI / 16); // Rotate counterclockwise
+        } else if (event.code === 'KeyT') {
+          this.rotateObject(Math.PI / 16); // Rotate clockwise
+        }
+      }
+    });
   }
 
   // Explicitly handle the click to start exploring
   startExploring() {
     console.log('Starting exploration');
-    if (!this.colorPickerVisible && this.controls) {
+    if (!this.isModificationMode && this.controls) {
       this.controls.lock();
     }
   }
@@ -395,6 +441,88 @@ export class CustomizableRoomComponent {
     }
   }
 
+  onMouseDown(event: MouseEvent) {
+    if (!this.isModificationMode) return;
+
+    // Convert mouse coordinates to normalized device coordinates
+    this.mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+    this.mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+
+    // Set up the raycaster
+    this.raycaster.setFromCamera(this.mouse, this.camera!);
+
+    // Find intersected objects (excluding walls and floor)
+    const intersects = this.raycaster.intersectObjects(this.scene!.children, true)
+        .filter(intersect => {
+          // Check if the object or its parent has a name that doesn't include 'Wall' or 'Floor'
+          let obj = intersect.object;
+          while (obj) {
+            if (obj.name && (obj.name.includes('Wall') || obj.name.includes('Floor'))) {
+              return false;
+            }
+            obj = obj.parent!;
+          }
+          return true;
+        });
+
+    if (intersects.length > 0) {
+      // Find the parent model of the clicked object
+      let selectedObj = intersects[0].object;
+
+      // Walk up the parent chain to find the root model
+      while (selectedObj.parent && selectedObj.parent !== this.scene) {
+        selectedObj = selectedObj.parent;
+      }
+
+      // If it's not a wall or floor, we can select it
+      if (!selectedObj.name?.includes('Wall') && !selectedObj.name?.includes('Floor')) {
+        this.selectedObject = selectedObj;
+        this.isDragging = true;
+        this.dragStart.set(event.clientX, event.clientY);
+        console.log('Selected object:', this.selectedObject.name);
+      }
+    }
+  }
+
+  onMouseMove(event: MouseEvent) {
+    if (!this.isModificationMode || !this.isDragging || !this.selectedObject) return;
+
+    // Calculate mouse movement
+    const deltaX = (event.clientX - this.dragStart.x) * 0.01;
+    const deltaZ = (event.clientY - this.dragStart.y) * 0.01;
+
+    // Move object in the camera plane
+    this.moveObjectInCameraPlane(deltaX, deltaZ);
+
+    // Update drag start position
+    this.dragStart.set(event.clientX, event.clientY);
+  }
+
+  onMouseUp() {
+    this.isDragging = false;
+    // Note: We don't clear the selectedObject here so we can still rotate it
+  }
+
+  moveObjectInCameraPlane(deltaX: number, deltaZ: number) {
+    if (!this.selectedObject || !this.camera) return;
+
+    // Get camera direction vectors
+    const forward = new THREE.Vector3();
+    this.camera.getWorldDirection(forward);
+    forward.y = 0; // Restrict to XZ plane
+    forward.normalize();
+
+    const right = new THREE.Vector3(-forward.z, 0, forward.x);
+
+    // Calculate movement vector
+    const movement = new THREE.Vector3()
+        .addScaledVector(right, deltaX)
+        .addScaledVector(forward, -deltaZ);
+
+    // Apply movement
+    this.selectedObject.position.add(movement);
+  }
+
   onWindowResize() {
     if (this.camera) {
       this.camera.aspect = window.innerWidth / window.innerHeight;
@@ -425,8 +553,8 @@ export class CustomizableRoomComponent {
 
     for (const direction of directions) {
       raycaster.set(
-        new THREE.Vector3(position.x, position.y - playerHeight / 2, position.z),
-        direction
+          new THREE.Vector3(position.x, position.y - playerHeight / 2, position.z),
+          direction
       );
 
       const intersects = raycaster.intersectObjects(this.colliders);
@@ -455,83 +583,16 @@ export class CustomizableRoomComponent {
     }
   }
 
-  // Toggle color picker visibility
-  toggleColorPicker(event: MouseEvent) {
-    event.preventDefault();
-    event.stopPropagation();
-
-    this.ngZone.run(() => {
-      this.colorPickerVisible = !this.colorPickerVisible;
-
-      // If controls are active, deactivate them when showing color picker
-      if (this.colorPickerVisible && this.controlsActive) {
-        this.controls?.unlock();
-      }
-    });
-  }
-
-  // Change the floor color
-  changeFloorColor(color: string) {
-    console.log('Changing floor color to:', color);
-    this.setObjectColor('SM_Floor', color);
-  }
-
-  // Method to change object material colors
-  setObjectColor(objectName: string, color: THREE.Color | number | string) {
-    const object = this.objectsMap.get(objectName);
-
-    if (object && object instanceof THREE.Mesh) {
-      // Check if material is an array
-      if (Array.isArray(object.material)) {
-        object.material.forEach(mat => {
-          if (mat instanceof THREE.MeshStandardMaterial) {
-            mat.color.set(color);
-          }
-        });
-      }
-      // Single material
-      else if (object.material instanceof THREE.MeshStandardMaterial) {
-        object.material.color.set(color);
-      }
-    } else {
-      // Try finding objects that contain the name (for objects like "SM_Floor_01", etc.)
-      const floorObjects = Array.from(this.objectsMap.keys())
-        .filter(key => key.includes(objectName));
-
-      if (floorObjects.length > 0) {
-        console.log('Found floor objects:', floorObjects);
-        floorObjects.forEach(key => {
-          const obj = this.objectsMap.get(key);
-          if (obj && obj instanceof THREE.Mesh) {
-            if (Array.isArray(obj.material)) {
-              obj.material.forEach(mat => {
-                if (mat instanceof THREE.MeshStandardMaterial) {
-                  mat.color.set(color);
-                }
-              });
-            } else if (obj.material instanceof THREE.MeshStandardMaterial) {
-              obj.material.color.set(color);
-            }
-          }
-        });
-      } else {
-        console.warn(`Object "${objectName}" not found or is not a mesh`);
-      }
-    }
-  }
-
   loadInitialModels() {
     // Use setTimeout to ensure the room is fully loaded first
     setTimeout(() => {
-      // Load bed at the specified position
-      this.loadModel('couch', new THREE.Vector3(10, 2, 10));
-
-      // You can add more furniture here:
-      // this.loadModel('desk', new THREE.Vector3(4, 0, 3), new THREE.Vector3(1, 1, 1), new THREE.Euler(0, Math.PI/2, 0));
-      // this.loadModel('chair', new THREE.Vector3(3, 0, 3));
+      // Load furniture at specified positions
+      this.loadModel('couch', new THREE.Vector3(5, 2, 5));
+      this.loadModel('bed', new THREE.Vector3(5, 2, 15));
+      // this.loadModel('desk', new THREE.Vector3(-5, 0, 5), new THREE.Vector3(1, 1, 1), new THREE.Euler(0, Math.PI/2, 0));
+      // this.loadModel('chair', new THREE.Vector3(-5, 0, 7));
     }, 1000); // 1-second delay to ensure the room is loaded
   }
-
 
   animate() {
     const clock = new THREE.Clock();
@@ -569,6 +630,11 @@ export class CustomizableRoomComponent {
         }
       }
 
+      // Highlight selected object in edit mode
+      if (this.isModificationMode && this.selectedObject) {
+        // We could add visual cues here to highlight the selected object
+      }
+
       // Clear before rendering
       this.renderer?.clear();
 
@@ -578,4 +644,10 @@ export class CustomizableRoomComponent {
 
     animateLoop();
   }
+
+  protected readonly FermerComponent = FermerComponent;
+  protected readonly PenSquareComponent = PenSquareComponent;
+  protected readonly BrainComponent = BrainComponent;
+  protected readonly EditComponent = EditComponent;
+  protected readonly alert = alert;
 }

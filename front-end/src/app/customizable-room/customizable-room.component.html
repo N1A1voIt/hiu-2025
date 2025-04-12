@@ -1,47 +1,48 @@
-<div class="" (click)="startExploring()">
-  <canvas #canvas class="w-full h-dvh"></canvas>
+<div class="relative w-full h-full">
+    <!-- Canvas for 3D rendering -->
+    <canvas #canvas class="w-full h-dvh" (click)="startExploring()"></canvas>
+
+    <!-- Action buttons -->
+    <div class="absolute top-0 right-0 m-4 flex flex-col space-y-2 z-10">
+
+    </div>
+
+    <!-- Instructions overlay -->
+    <div *ngIf="!controlsActive && !isModificationMode"
+         class="absolute inset-0 flex items-center justify-end bg-black bg-opacity-10 text-white cursor-pointer z-20"
+         >
+        <div class="flex flex-col h-full p-6 justify-between">
+            <app-action-btn [action]="startExploring.bind(this)" [iconComponent]="FermerComponent"></app-action-btn>
+            <div class="p-6 flex flex-col gap-2 bg-transparent">
+    <!--            <h1 class="text-2xl font-bold mb-4">Click to explore the room</h1>-->
+    <!--            <p class="mb-2">Move: WASD / Arrow keys</p>-->
+    <!--            <p>Look: Mouse</p>-->
+                <app-action-btn [action]="toggleModificationMode" [iconComponent]="EditComponent"></app-action-btn>
+                <app-action-btn [action]="toggleModificationMode" [iconComponent]="BrainComponent"></app-action-btn>
 
 
+<!--                <button (click)="toggleModificationMode()">-->
+<!--                    <app-pen-square color="#fff" size="30px"></app-pen-square>-->
+<!--                </button>-->
+    <!--            <app-action-btn [action]="toggleModificationMode"-->
+    <!--                            iconPath="fi-tr-attribution-pen.svg"-->
+    <!--                            [label]="isModificationMode ? 'Exit Edit Mode' : 'Edit Mode'"></app-action-btn>-->
+            </div>
+        </div>
+    </div>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<!--  <div *ngIf="!controlsActive " class="instructions" (click)="startExploring()">-->
-<!--    <div class="content">-->
-<!--      <h1>Click to explore the room</h1>-->
-<!--      <p>Move: WASD / Arrow keys</p>-->
-<!--      <p>Look: Mouse</p>-->
-<!--    </div>-->
-<!--  </div>-->
-
-<!--  <div *ngIf="!controlsActive" class="absolute z-50 w-20 h-20 bg-white rounded-full shadow-lg flex items-center justify-center left-20 top-10">-->
-<!--    <button class="toggle-modification-btn" (click)="toggleModificationMode()">-->
-<!--      {{ isModificationMode ? 'Quit Modification Mode' : 'Enter Modification Mode' }}-->
-<!--    </button>-->
-<!--  </div>-->
-
-
-<!--  &lt;!&ndash; Color picker button &ndash;&gt;-->
-<!--  <div class="color-control" [class.active]="colorPickerVisible">-->
-<!--    <button class="toggle-btn" (click)="toggleColorPicker($event)">-->
-<!--      <span *ngIf="!colorPickerVisible">🎨</span>-->
-<!--      <span *ngIf="colorPickerVisible">✖</span>-->
-<!--    </button>-->
-
-<!--    <div *ngIf="colorPickerVisible" class="color-panel">-->
-<!--      <h3>Floor Color</h3>-->
-<!--      <input type="color" #colorInput (change)="changeFloorColor(colorInput.value)" class="color-picker">-->
-<!--    </div>-->
-<!--  </div>-->
+    <!-- Edit mode instructions -->
+    <div *ngIf="isModificationMode"
+         class="absolute bottom-0 left-0 m-4 p-4 bg-white bg-opacity-90 rounded-lg shadow-lg text-gray-800 z-20">
+        <h2 class="text-lg font-semibold mb-2">Edit Mode</h2>
+        <ul class="text-sm mb-3">
+            <li class="mb-1">• Click on any object to select it</li>
+            <li class="mb-1">• Drag to move the selected object</li>
+            <li class="mb-1">• Press R/T keys to rotate object</li>
+        </ul>
+        <div *ngIf="selectedObject" class="text-xs font-medium text-blue-600">
+            Selected: {{ selectedObject.name }}
+        </div>
+        <app-action-btn [action]="toggleModificationMode" [iconComponent]="FermerComponent"></app-action-btn>
+    </div>
 </div>
