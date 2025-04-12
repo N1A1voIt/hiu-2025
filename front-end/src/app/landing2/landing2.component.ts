@@ -1,9 +1,11 @@
 import { Component } from '@angular/core';
+import { DonutComponent } from '../donut/donut.component';
+import { MenuComponent } from "../components-atomique/menu/menu.component";
 
 @Component({
   selector: 'app-landing2',
   standalone: true,
-  imports: [],
+  imports: [DonutComponent, MenuComponent],
   templateUrl: './landing2.component.html',
   styleUrl: './landing2.component.scss'
 })
