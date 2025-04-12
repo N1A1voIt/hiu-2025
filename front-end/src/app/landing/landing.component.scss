@@ -22,10 +22,53 @@
   height: 100dvh;
   display: flex;
   flex-direction: row;
+  position: relative;
 }
 .landing .content .left {
   flex: 1;
+  position: relative;
 }
+.landing .content .left .popUp {
+  display: flex;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+}
+.landing .content .left .popUp img {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+  border-radius: 100%;
+  position: relative;
+}
+.landing .content .left .popUp img::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 12px;
+  height: 12px;
+  background-color: red;
+  border-radius: 50%;
+  border: 2px solid white;
+}
+.landing .content .left .popUp .phaseTwo {
+  background-color: #fff;
+  padding: 5px 10px;
+  border-radius: 20px;
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+}
+.landing .content .left .popUp .phaseTwo button svg {
+  fill: #000;
+  z-index: 1;
+}
+input:focus {
+  outline: none;
+  box-shadow: none;
+}
+
 .landing .content .right {
   flex: 1;
   display: flex;
@@ -33,14 +76,77 @@
   gap: 20px;
   position: relative;
 }
-.landing .content .right .up {
-  padding: 20px;
+// .landing .content .right .up {
+//   padding: 20px;
+//   border-radius: 20px;
+//   display: flex;
+//   flex-direction: column;
+//   gap: 20px;
+//   background-color: rgba(255, 255, 255, 0.455);
+//   filter: blur(5px);
+// }
+.landing .content .up {
+  display: flex;
+  flex-direction: row;
+  gap: 50px;
+  position: absolute;
+  top: -40px;
+  right: 0;
+}
+
+.landing .content .up .historique button {
+  padding: 5px 10px;
+  background-color: #ffffff27;
+  border: 1px solid #ffffff;
+  color: #fff;
+  border-radius: 20px;
+}
+.landing .content .up .continuer button {
+  border-radius: 100%;
+  background-color: transparent;
+  // border: 2px solid #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.landing .content .up .continuer svg {
+  fill: #fff;
+  padding: 5px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.landing .content .down {
+  background-color: #fff;
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  padding: 10px;
   border-radius: 20px;
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
 }
-.landing .content h1 {
-  font-size: 2.5em;
-  color: #ffff;
+.landing .content .down .safeP img {
+  padding: 20px;
+  border-radius: 20px;
+}
+.landing .content .down .safeP {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.landing .content .down .safeN {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 30px;
+}
+.landing .content .down .safeN img {
+  width: 40px;
+  height: 40px;
+  object-fit: cover;
+  border-radius: 100%;
 }

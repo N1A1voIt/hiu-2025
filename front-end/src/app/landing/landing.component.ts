@@ -9,5 +9,23 @@ import { Component } from '@angular/core';
   styleUrl: './landing.component.scss',
 })
 export class LandingComponent {
-  
+  isClicked: boolean = false;
+  isChat: boolean = false;
+  isAnimating: boolean = false;
+  isAnimatingChat: boolean = false;
+
+  clickSafe() {
+    this.isAnimating = true;
+    setTimeout(() => {
+      this.isClicked = !this.isClicked;
+      this.isAnimating = false;
+    }, 3000);
+  }
+  clickChat() {
+    this.isAnimatingChat = true;
+    setTimeout(() => {
+      this.isChat = !this.isChat;
+      this.isAnimatingChat = false;
+    }, 300);
+  }
 }
