@@ -1,5 +1,5 @@
 import {Component, ElementRef, NgZone, ViewChild} from '@angular/core';
-import {NgIf} from '@angular/common';
+import {NgClass, NgIf} from '@angular/common';
 import * as THREE from 'three';
 import {PointerLockControls} from 'three/examples/jsm/controls/PointerLockControls.js';
 import {GLTFLoader} from 'three/examples/jsm/loaders/GLTFLoader.js';
@@ -9,6 +9,7 @@ import {PenSquareComponent} from "../components/pen-square/pen-square.component"
 import {MenuBurgerComponent} from "../components/menu-burger/menu-burger.component";
 import {ActionBtnComponent} from "../action-btn/action-btn.component";
 import {BrainComponent} from "../components/brain/brain.component";
+import {StudyHelperComponent} from "../study-helper/study-helper.component";
 
 @Component({
   selector: 'app-customizable-room',
@@ -16,11 +17,9 @@ import {BrainComponent} from "../components/brain/brain.component";
   imports: [
     NgIf,
     ActionBtnComponent,
-    EditComponent,
-    FermerComponent,
-    PenSquareComponent,
-    MenuBurgerComponent,
-    ActionBtnComponent
+    ActionBtnComponent,
+    StudyHelperComponent,
+    NgClass
   ],
   templateUrl: './customizable-room.component.html',
   styleUrl: './customizable-room.component.scss'
@@ -66,6 +65,12 @@ export class CustomizableRoomComponent {
   mouse = new THREE.Vector2();
 
   camHeight: number = 8;
+
+  isStudyingMode: boolean = false;
+
+  toggleStudyingMode = () => {
+    this.isStudyingMode = !this.isStudyingMode;
+  }
 
   toggleModificationMode = () => {
     this.isModificationMode = !this.isModificationMode;
@@ -393,6 +398,9 @@ export class CustomizableRoomComponent {
     if (!this.isModificationMode && this.controls) {
       this.controls.lock();
     }
+    if (this.isStudyingMode && this.controls) {
+      this.controls.unlock();
+    }
   }
 
   onKeyDown(event: KeyboardEvent) {
@@ -621,7 +629,7 @@ export class CustomizableRoomComponent {
         const moveX = this.right.clone().multiplyScalar(this.moveDirection.x);
         const moveZ = this.forward.clone().multiplyScalar(this.moveDirection.z);
 
-        const move = moveX.add(moveZ).multiplyScalar(5 * delta); // Adjust speed here
+        const move = moveX.add(moveZ).multiplyScalar(10 * delta); // Adjust speed here
 
         const newPosition = this.camera!.position.clone().add(move);
 
@@ -649,5 +657,4 @@ export class CustomizableRoomComponent {
   protected readonly PenSquareComponent = PenSquareComponent;
   protected readonly BrainComponent = BrainComponent;
   protected readonly EditComponent = EditComponent;
-  protected readonly alert = alert;
 }

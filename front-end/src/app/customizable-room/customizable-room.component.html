@@ -1,24 +1,23 @@
 <div class="relative w-full h-full">
-    <!-- Canvas for 3D rendering -->
     <canvas #canvas class="w-full h-dvh" (click)="startExploring()"></canvas>
 
-    <!-- Action buttons -->
     <div class="absolute top-0 right-0 m-4 flex flex-col space-y-2 z-10">
 
     </div>
 
-    <!-- Instructions overlay -->
-    <div *ngIf="!controlsActive && !isModificationMode"
-         class="absolute inset-0 flex items-center justify-end bg-black bg-opacity-10 text-white cursor-pointer z-20"
-         >
-        <div class="flex flex-col h-full p-6 justify-between">
-            <app-action-btn [action]="startExploring.bind(this)" [iconComponent]="FermerComponent"></app-action-btn>
-            <div class="p-6 flex flex-col gap-2 bg-transparent">
+    <div
+        *ngIf="(!controlsActive && !isModificationMode) || isStudyingMode"
+        class="absolute inset-0 flex flex-col  bg-terracotta bg-opacity-10 text-white cursor-pointer z-20"
+        [ngClass]="isStudyingMode ? 'items-center' : 'items-end'"
+    >
+        <div class="flex flex-col p-6 justify-between" [ngClass]="isStudyingMode ? '' : 'h-full'">
+            <app-action-btn [action]="isStudyingMode ? toggleStudyingMode.bind(this) : startExploring.bind(this)" [iconComponent]="FermerComponent"></app-action-btn>
+            <div class="p-6 flex flex-col gap-2 bg-transparent" *ngIf="!isStudyingMode">
     <!--            <h1 class="text-2xl font-bold mb-4">Click to explore the room</h1>-->
     <!--            <p class="mb-2">Move: WASD / Arrow keys</p>-->
     <!--            <p>Look: Mouse</p>-->
                 <app-action-btn [action]="toggleModificationMode" [iconComponent]="EditComponent"></app-action-btn>
-                <app-action-btn [action]="toggleModificationMode" [iconComponent]="BrainComponent"></app-action-btn>
+                <app-action-btn [action]="toggleStudyingMode" [iconComponent]="BrainComponent"></app-action-btn>
 
 
 <!--                <button (click)="toggleModificationMode()">-->
@@ -29,10 +28,11 @@
     <!--                            [label]="isModificationMode ? 'Exit Edit Mode' : 'Edit Mode'"></app-action-btn>-->
             </div>
         </div>
+        <app-study-helper *ngIf="isStudyingMode"></app-study-helper>
+
     </div>
 
-    <!-- Edit mode instructions -->
-    <div *ngIf="isModificationMode"
+    <div *ngIf="isModificationMode && !isStudyingMode"
          class="absolute bottom-0 left-0 m-4 p-4 bg-[#ffffff42] backdrop-blur-[10px] border border-white bg-opacity-90 rounded-lg shadow-lg text-white z-20">
         <h2 class="text-lg font-semibold mb-2">Edit Mode</h2>
         <ul class="text-sm mb-3">
