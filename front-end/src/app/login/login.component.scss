@@ -1,0 +1,337 @@
+/*main*/
+main {
+  width: 97dvw;
+  padding: 10px;
+  height: 96dvh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+}
+/*left*/
+.left {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  gap: 10px;
+}
+.left header {
+  background-color: #ffff;
+  display: flex;
+  flex-direction: row;
+  position: relative;
+  right: 250px;
+  padding-bottom: 40px;
+}
+.left header .logo img {
+  width: 80px;
+}
+
+.left .title {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  /* border: 2px solid red; */
+}
+.left .title .text {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.left .title .text h1 {
+  font-size: 2em;
+  font-weight: 600;
+  font-style: normal;
+  padding-bottom: 20px;
+}
+.left .title .text p {
+  font-size: 0.9em;
+  color: orange;
+}
+.left .title .google {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: 1px solid orange;
+  padding: 5px 100px;
+  transition: 0.3s ease-in-out;
+}
+.left .title .google:hover {
+  background-color: orange;
+  color: #ffff;
+}
+.left .title .google img {
+  width: 20px;
+  height: 20px;
+}
+.left .title .google span {
+  font-size: 0.7em;
+  font-weight: 600;
+  font-style: normal;
+}
+
+.left .separation {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+.left .separation p {
+  margin: 0 10px;
+  font-size: 16px;
+  text-align: center;
+  white-space: nowrap;
+  color: orange;
+}
+.left .separation::before,
+.left .separation::after {
+  content: "";
+  flex: 1;
+  height: 0.5px;
+  width: 150px;
+  background-color: orange;
+  display: block;
+}
+.left .separation::before {
+  margin-right: 10px;
+}
+.left .separation::after {
+  margin-left: 10px;
+}
+
+.left .form {
+  /* background-color: red; */
+  width: 53%;
+}
+.left .form form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.left .form form .input {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  /* background-color: red; */
+}
+.left .form form .input p {
+  font-size: 0.8em;
+}
+.left .form form .input input {
+  width: 80%;
+  padding: 5px;
+  padding-left: 15px;
+  border: 1px solid orange;
+  transition: 0.3s ease-in-out;
+}
+.left .form form .input input:hover {
+  background-color: green;
+}
+.left .form form .input input::placeholder {
+  color: orange;
+}
+.left .form form .input .error {
+  color: orange;
+  font-size: 0.7em;
+}
+
+.left .plus {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.8em;
+}
+.left .plus .remember {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  color: var(#000, #333);
+}
+.left .plus .remember label {
+  padding-top: 4px;
+}
+.left .plus .remember input[type="checkbox"] {
+  appearance: none;
+  width: 15px;
+  height: 15px;
+  border: 2px solid var(#000, orange);
+  border-radius: 4px;
+  background-color: #ffff;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: all 0.2s ease-in-out;
+}
+.left .plus .remember input[type="checkbox"]:checked {
+  background-color: var(--forest-green, orange);
+  border-color: var(--forest-green, orange);
+}
+.left .plus .remember input[type="checkbox"]:checked::before {
+  content: "";
+  color: #ffff;
+  font-size: 0.8em;
+  display: block;
+}
+.left .plus .remember input[type="checkbox"]:hover {
+  border-color: var(--hover-color, green);
+}
+.left .plus .remember label {
+  cursor: pointer;
+  user-select: none;
+}
+.left .plus .forget a {
+  position: relative;
+  color: var(#000);
+  text-decoration: none;
+  padding-bottom: 5px;
+}
+.left .plus .forget a::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background-color: var(#000);
+  transition: width 0.3s ease;
+}
+.left .plus .forget a:hover::after {
+  width: 100%;
+}
+
+.left .btn-f {
+  border: 2px solid orange;
+  background-color: orange;
+  color: #ffff;
+  padding: 4px 8px;
+  cursor: pointer;
+  transition: 0.1s ease-in-out;
+}
+.left .btn-f:hover {
+  border: 2px solid orange;
+  background-color: #ffff;
+  color: orange;
+}
+
+/*right*/
+.right {
+  /* background-color: rebeccapurple; */
+  position: relative;
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.right .pic {
+  display: flex;
+  justify-content: end;
+  align-items: end;
+  padding-right: 50px;
+}
+.right .pic .dzgn {
+  width: 600px;
+  height: 575px;
+  position: relative;
+}
+.right .pic .dzgn video {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 40px;
+}
+
+.right .pic .dzgn .bas {
+  position: absolute;
+  content: "";
+  height: 60px;
+  background-color: #ffff;
+  width: 60px;
+  bottom: 0;
+  right: 0;
+  border-top-left-radius: 20px;
+}
+.right .pic .dzgn .bas::before,
+.right .pic .dzgn .bas::after {
+  position: absolute;
+  content: "";
+  width: 20px;
+  aspect-ratio: 1;
+  /* background-color: red; */
+  background: radial-gradient(circle 20px at top left, #f1060600 98%, #ffff 0%);
+}
+.right .pic .dzgn .bas::before {
+  bottom: 0;
+  left: -20px;
+}
+.right .pic .dzgn .bas::after {
+  right: 0;
+  top: -20px;
+}
+
+.right .pic .dzgn .top {
+  z-index: 1;
+  position: absolute;
+  content: "";
+  height: 60px;
+  background-color: #ffff;
+  width: 60px;
+  top: 0;
+  left: 0;
+  border-bottom-right-radius: 20px;
+}
+.right .pic .dzgn .top::before,
+.right .pic .dzgn .top::after {
+  position: absolute;
+  content: "";
+  width: 20px;
+  aspect-ratio: 1;
+  /* background-color: red; */
+  background: radial-gradient(
+    circle 20px at bottom right,
+    #f1060600 98%,
+    #ffff 0%
+  );
+}
+.right .pic .dzgn .top::before {
+  top: 0;
+  right: -20px;
+}
+.right .pic .dzgn .top::after {
+  left: 0;
+  bottom: -20px;
+}
+
+.right .text {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  bottom: 50px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+.right .text h1 {
+  color: #ffff;
+  font-weight: 600;
+  font-style: normal;
+  font-size: 3em;
+  width: 500px;
+  text-align: center;
+  padding-bottom: 10px;
+  font-family: Discognate, sans-serif;
+}
+.right .text p {
+  text-align: center;
+  width: 400px;
+  color: #ffff;
+  font-size: 0.9em;
+}
