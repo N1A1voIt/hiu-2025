@@ -1,9 +1,10 @@
 <main class="landing">
   <article class="bg">
-    <video src="/assets/video/flower.mp4" autoplay muted loop></video>
+    <app-family></app-family>
+    <!-- <video src="/assets/video/flower.mp4" autoplay muted loop></video> -->
   </article>
   <article class="content">
-    <div class="chat">
+    <div class="chat" *ngIf="isChat">
       <div class="you">
         <textarea>Bonjour</textarea>
       </div>
@@ -72,10 +73,21 @@
         </div>
       </div>
       <div class="down">
-        <div class="safeP" *ngIf="isClicked" [ngStyle]="{ width: containerWidth + 'px' }">
-          <img src="/assets/img/img.png" alt="" class="object-cover" [ngStyle]="{ width: roomWidth + 'px', height: roomHeight + 'px' }" />
-<!--          <app-customizable-room [width]="roomWidth" [height]="roomHeight"></app-customizable-room>-->
-          <button class="safePlace" *ngIf="!isGrowing" (click)="growRoom()">Safeplace</button>
+        <div
+          class="safeP"
+          *ngIf="isClicked"
+          [ngStyle]="{ width: containerWidth + 'px' }"
+        >
+          <img
+            src="/assets/img/img.png"
+            alt=""
+            class="object-cover"
+            [ngStyle]="{ width: roomWidth + 'px', height: roomHeight + 'px' }"
+          />
+          <!--          <app-customizable-room [width]="roomWidth" [height]="roomHeight"></app-customizable-room>-->
+          <button class="safePlace" *ngIf="!isGrowing" (click)="growRoom()">
+            Safeplace
+          </button>
         </div>
 
         <div class="safeN" *ngIf="!isClicked">

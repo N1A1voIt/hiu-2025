@@ -11,16 +11,16 @@ article {
   background: #0f0f0f;
   width: 80%;
   height: 90%;
-  border-radius: 2.5em; /* 40px → 2.5em */
+  border-radius: 2.5vw;
 }
 
 article section {
   display: flex;
-  padding: 0.625em; /* 10px → 0.625em */
+  padding: 0.5vw;
   justify-content: center;
   align-items: center;
   overflow: hidden;
-  border-radius: 2.5em; /* 40px → 2.5em */
+  border-radius: 2.5vw;
   position: relative;
 }
 
@@ -28,10 +28,10 @@ article section {
   position: relative;
   overflow: hidden;
   background: #7855ed;
-  padding: 0.625em; /* 10px → 0.625em */
-  border-radius: 2.1875em; /* 35px → 2.1875em */
+  padding: 0.5vw;
+  border-radius: 2vw;
   flex: 1;
-  height: 34.6875em; /* 555px → 34.6875em */
+  height: 87vh;
   display: flex;
   align-items: left;
   justify-content: center;
@@ -39,10 +39,10 @@ article section {
 }
 
 .content {
-  padding: 3.125em; /* 50px → 3.125em */
+  padding: 3vw;
   display: flex;
   flex-direction: column;
-  gap: 1.25em; /* 20px → 1.25em */
+  gap: 1.5vh;
 }
 
 .content p {
@@ -68,16 +68,16 @@ article section {
 .buttons {
   display: flex;
   justify-content: left;
-  gap: 3.125em; /* 50px → 3.125em */
+  gap: 3vw;
   z-index: 1;
 }
 
 .other_option {
   background: transparent;
-  border: 0.125em solid #fff; /* 2px → 0.125em */
+  border: 2px solid #fff;
   color: #fff;
-  padding: 0.625em 3.125em; /* 10px 50px → 0.625em 3.125em */
-  border-radius: 1.875em; /* 30px → 1.875em */
+  padding: 1vh 3vw;
+  border-radius: 2em;
   cursor: pointer;
   position: relative;
   overflow: hidden;
@@ -104,45 +104,50 @@ article section {
   background: #fff;
   border: none;
   color: #7855ed;
-  padding: 0.625em 3.125em; /* 10px 50px → 0.625em 3.125em */
-  border-radius: 1.875em; /* 30px → 1.875em */
+  padding: 1vh 3vw;
+  border-radius: 2em;
   transition: box-shadow 0.3s ease;
 }
 
 .choose_me:hover {
-  box-shadow: 0 0 0.625em 0.3125em #bb96f7; /* 10px 5px → 0.625em 0.3125em */
+  box-shadow: 0 0 0.6vw 0.3vw #bb96f7;
 }
 
 .holo {
   position: absolute;
-  bottom: -3.75em; /* -60px → -3.75em */
-  left: -3.125em; /* -50px → -3.125em */
+  bottom: -20vh;
+  left: -3vw;
 }
 
 .holo img {
-  width: 18.75em; /* 300px → 18.75em */
+  width: 20vw;
+  max-width: 300px;
 }
 
 .cercles {
   position: absolute;
-  left: 21.875em; /* 350px → 21.875em */
+  left: 20vw;
 }
 
 .grand {
-  width: 25em; /* 400px → 25em */
-  height: 25em; /* 400px → 25em */
+  width: 25vw;
+  height: 25vw;
+  max-width: 400px;
+  max-height: 400px;
   background: #0f0f0f;
-  border-radius: 31.25em; /* 500px → 31.25em */
+  border-radius: 50%;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
 .petit {
-  width: 12.5em; /* 200px → 12.5em */
-  height: 12.5em; /* 200px → 12.5em */
+  width: 12.5vw;
+  height: 12.5vw;
+  max-width: 200px;
+  max-height: 200px;
   background: #7855ed;
-  border-radius: 31.25em; /* 500px → 31.25em */
+  border-radius: 50%;
 }
 
 .right {
@@ -151,18 +156,19 @@ article section {
 
 .threed {
   position: absolute;
-  width: 75em; /* 1200px → 75em */
-  top: 0.125em; /* 2px → 0.125em */
-  left: 4.6875em; /* 75px → 4.6875em */
+  width: 70vw;
+  max-width: 1200px;
+  top: 0.2vh;
+  left: 4vw;
 }
 
 .link {
   position: absolute;
-  bottom: 3.125em; /* 50px → 3.125em */
-  right: 1.25em; /* 20px → 1.25em */
+  bottom: 5vh;
+  right: 1.5vw;
   display: flex;
   flex-direction: column;
-  gap: 1.25em; /* 20px → 1.25em */
+  gap: 2vh;
 }
 
 .link i {

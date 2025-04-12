@@ -2,11 +2,12 @@ import { CommonModule } from '@angular/common';
 import {Component, ElementRef, Renderer2, ViewChild} from '@angular/core';
 import { Router } from '@angular/router';
 import {CustomizableRoomComponent} from '../customizable-room/customizable-room.component';
+import { FamilyComponent } from '../family/family.component';
 
 @Component({
   selector: 'app-landing',
   standalone: true,
-  imports: [CommonModule, CustomizableRoomComponent],
+  imports: [CommonModule, CustomizableRoomComponent, FamilyComponent],
   templateUrl: './landing.component.html',
   styleUrl: './landing.component.scss',
 })
