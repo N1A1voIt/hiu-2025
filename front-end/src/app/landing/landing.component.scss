@@ -1,0 +1,47 @@
+.spotlight {
+  width: 98.9dvw;
+  height: 100dvh;
+  overflow: hidden;
+}
+.spotlight .bg {
+  width: 100dvw;
+  height: 100dvh;
+  overflow: hidden;
+}
+.spotlight .page1 .bg video {
+  width: 100%;
+  overflow: hidden;
+}
+.spotlight .page1 {
+  position: relative;
+  width: 100dvw;
+  height: 100dvh;
+}
+.spotlight .page1 .logo img {
+  position: absolute;
+  width: 100px;
+  z-index: 1;
+  right: 50px;
+  bottom: 30px;
+}
+/* Effet Hover sur page1 */
+.spotlight .page1 .text {
+  position: absolute;
+  width: 100px;
+  z-index: 1;
+  left: 50px;
+  bottom: 50px;
+  transition: bottom 0.5s ease;
+}
+.spotlight .page1 .text h1 {
+  color: transparent;
+  font-family: Discognate, sans-serif;
+  font-size: 10em;
+  transition: color 0.3s ease;
+}
+.spotlight .page1:hover .text {
+  bottom: 150px;
+}
+.spotlight .page1:hover .text h1 {
+  color: var(--red);
+}
