@@ -71,14 +71,16 @@
           </button>
         </div>
       </div>
-      <div class="down" (click)="clickSafe()">
-        <div class="safeP" *ngIf="isClicked">
-          <img src="/assets/img/placeholder.jpg" alt="" />
-          <button class="safePlace">Safeplace</button>
+      <div class="down">
+        <div class="safeP" *ngIf="isClicked" [ngStyle]="{ width: containerWidth + 'px' }">
+          <img src="/assets/img/img.png" alt="" class="object-cover" [ngStyle]="{ width: roomWidth + 'px', height: roomHeight + 'px' }" />
+<!--          <app-customizable-room [width]="roomWidth" [height]="roomHeight"></app-customizable-room>-->
+          <button class="safePlace" *ngIf="!isGrowing" (click)="growRoom()">Safeplace</button>
         </div>
+
         <div class="safeN" *ngIf="!isClicked">
-          <img src="/assets/img/placeholder.jpg" alt="" />
-          <button class="safePlace">Safeplace</button>
+          <img src="/assets/img/img.png" alt="" />
+          <button class="safePlace" (click)="clickSafe()">Safeplace</button>
         </div>
       </div>
     </section>
