@@ -4,6 +4,7 @@ import { Component, Input } from '@angular/core';
   selector: 'app-pen-square',
   templateUrl: './pen-square.component.html',
   styleUrls: ['./pen-square.component.scss'],
+  standalone: true
 })
 export class PenSquareComponent {
   @Input() size: string = '24px';
