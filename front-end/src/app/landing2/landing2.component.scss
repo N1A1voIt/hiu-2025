@@ -1,5 +1,11 @@
+:root {
+  --black: #0f0f0f;
+  --light-purple: #bb96f7;
+  --mid-purple: #7855ed;
+  --white: #fff;
+}
 main {
-  background: tan;
+  background: var(--mid-purple);
   width: 100vw;
   height: 100vh;
   display: flex;
@@ -24,7 +30,7 @@ article section {
 .left {
   position: relative;
   overflow: hidden;
-  background: tan;
+  background: var(--mid-purple);
   padding: 10px;
   border-radius: 35px;
   flex: 1;
@@ -42,7 +48,7 @@ article section {
 }
 .content p {
   font-size: 0.7em;
-  color: #fff;
+  color: var(--white);
   z-index: 1;
 }
 .accroche {
@@ -53,7 +59,7 @@ article section {
   z-index: 1;
 }
 .accroche span {
-  color: #fff;
+  color: var(--white);
   font-size: 2.5em;
   white-space: nowrap;
 }
@@ -65,8 +71,8 @@ article section {
 }
 .other_option {
   background: transparent;
-  border: 2px solid #fff;
-  color: #fff;
+  border: 2px solid var(--white);
+  color: var(--white);
   padding: 10px 50px;
   border-radius: 30px;
   cursor: pointer;
@@ -90,16 +96,16 @@ article section {
   transform: translate(-50%, -50%) scale(2);
 }
 .choose_me {
-  background: #fff;
+  background: var(--white);
   border: none;
-  color: tan;
+  color: var(--mid-purple);
   padding: 10px 50px;
   border-radius: 30px;
   transition: box-shadow 0.3s ease;
 }
 
 .choose_me:hover {
-  box-shadow: 0 0 10px 5px beige;
+  box-shadow: 0 0 10px 5px var(--light-purple);
 }
 .holo {
   position: absolute;
@@ -125,7 +131,7 @@ article section {
 .petit {
   width: 200px;
   height: 200px;
-  background: tan;
+  background: var(--mid-purple);
   border-radius: 500px;
 }
 .right {
@@ -147,5 +153,71 @@ article section {
 }
 .link i {
   font-size: 1.2em;
-  color: #fff;
+  color: var(--white);
+}
+/*header*/
+header {
+  position: absolute;
+  color: var(--white);
+  z-index: 10;
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  top: 0;
+  padding: 30px;
+  align-items: center;
+}
+header .right {
+  display: flex;
+  gap: 30px;
+  justify-content: center;
+  align-items: center;
+}
+header .language {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  font-size: 0.8em;
+  justify-content: center;
+  align-items: center;
+}
+header .language p {
+  text-align: center;
+}
+header .search {
+  /* background-color: red; */
+}
+header .search i {
+  font-size: 0.8em;
+}
+header .bouton {
+  background: var(--mid-purple);
+  color: var(--white);
+  padding: 10px 15px;
+  border-radius: 20px;
+  border: none;
+  /* background-color: rgba(3, 177, 41, 0.661); */
+}
+
+header .left {
+  display: flex;
+  gap: 15px;
+  /* justify-content: space-between; */
+  align-items: center;
+}
+.logo svg {
+  width: 20px;
+}
+header .grid {
+  display: flex;
+}
+header nav {
+  display: flex;
+  gap: 20px;
+  padding-left: 30px;
+}
+header nav a {
+  color: var(--white);
+  text-decoration: none;
+  font-size: 0.8em;
 }
