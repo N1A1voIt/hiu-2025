@@ -49,6 +49,13 @@ export class ChildRoomComponent {
   // Color picker state
   colorPickerVisible = false;
 
+  isModificationMode: boolean = false;
+
+  toggleModificationMode() {
+    this.isModificationMode = !this.isModificationMode;
+    console.log('Modification mode:', this.isModificationMode ? 'ON' : 'OFF');
+  }
+
   constructor(private ngZone: NgZone) {}
 
   ngOnInit() {
