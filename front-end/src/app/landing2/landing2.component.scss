@@ -1,5 +1,5 @@
 main {
-  background: var(--mid-purple);
+  background: tan;
   width: 100vw;
   height: 100vh;
   display: flex;
@@ -24,7 +24,7 @@ article section {
 .left {
   position: relative;
   overflow: hidden;
-  background: var(--mid-purple);
+  background: tan;
   padding: 10px;
   border-radius: 35px;
   flex: 1;
@@ -42,7 +42,7 @@ article section {
 }
 .content p {
   font-size: 0.7em;
-  color: var(--white);
+  color: #fff;
   z-index: 1;
 }
 .accroche {
@@ -53,7 +53,7 @@ article section {
   z-index: 1;
 }
 .accroche span {
-  color: var(--white);
+  color: #fff;
   font-size: 2.5em;
   white-space: nowrap;
 }
@@ -65,8 +65,8 @@ article section {
 }
 .other_option {
   background: transparent;
-  border: 2px solid var(--white);
-  color: var(--white);
+  border: 2px solid #fff;
+  color: #fff;
   padding: 10px 50px;
   border-radius: 30px;
   cursor: pointer;
@@ -90,16 +90,16 @@ article section {
   transform: translate(-50%, -50%) scale(2);
 }
 .choose_me {
-  background: var(--white);
+  background: #fff;
   border: none;
-  color: var(--mid-purple);
+  color: tan;
   padding: 10px 50px;
   border-radius: 30px;
   transition: box-shadow 0.3s ease;
 }
 
 .choose_me:hover {
-  box-shadow: 0 0 10px 5px var(--light-purple);
+  box-shadow: 0 0 10px 5px beige;
 }
 .holo {
   position: absolute;
@@ -125,7 +125,7 @@ article section {
 .petit {
   width: 200px;
   height: 200px;
-  background: var(--mid-purple);
+  background: tan;
   border-radius: 500px;
 }
 .right {
@@ -147,5 +147,5 @@ article section {
 }
 .link i {
   font-size: 1.2em;
-  color: var(--white);
+  color: #fff;
 }
