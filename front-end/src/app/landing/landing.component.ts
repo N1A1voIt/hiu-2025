@@ -11,14 +11,13 @@ import {VideoAnalyzerComponent} from '../video-analyzer/video-analyzer.component
 @Component({
   selector: 'app-landing',
   standalone: true,
-  imports: [CommonModule, CustomizableRoomComponent, FamilyComponent, ClipboardComponent],
-
   imports: [
     CommonModule,
     CustomizableRoomComponent,
     FamilyComponent,
     RouterModule,
     VideoAnalyzerComponent,
+    ClipboardComponent,
   ],
   templateUrl: './landing.component.html',
   styleUrl: './landing.component.scss',

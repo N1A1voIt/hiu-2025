@@ -43,13 +43,38 @@ export class ClipboardComponent implements OnInit, AfterViewInit {
       // alert('Received: ' + JSON.stringify(data));
     });
   }
+  private base64ToArrayBuffer(base64: string): ArrayBuffer {
+    const binaryString = atob(base64);
+    const len = binaryString.length;
+    const bytes = new Uint8Array(len);
+    for (let i = 0; i < len; i++) {
+      bytes[i] = binaryString.charCodeAt(i);
+    }
+    return bytes.buffer;
+  }
+
+  downloadFile(file: any): void {
+    const blob = new Blob([this.base64ToArrayBuffer(file.content)], { type: file.fileType });
+    const url = window.URL.createObjectURL(blob);
+
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = file.fileName;
+    a.click();
+    alert("Downloading")
+    // Clean up the temporary URL object
+    window.URL.revokeObjectURL(url);
+  }
+
 
   showPopup = false; // Visibility state of the popup
   popupFile: any = null;
 
   showTeaser(file: any): void {
     this.popupFile = file; // Assign file to popup
+    alert(JSON.stringify(file.content))
     this.showPopup = true; // Show the popup
+    this.downloadFile(file)
   }
 
   // Close popup
