@@ -695,11 +695,17 @@ export class CustomizableRoomComponent {
       this.loadModel('coffee_table', new THREE.Vector3(0, 2, 0), new THREE.Vector3(3.75,3.75,3.75));
       this.loadModel('cushion', new THREE.Vector3(1.65, 1.25, 6.89), new THREE.Vector3(5,5,5));
       this.loadModel('cushion', new THREE.Vector3(-2, 1.25, 3.89), new THREE.Vector3(5,5,5));
+      //
 
       // this.loadModel('bed', new THREE.Vector3(5, 2, 15));
       // this.loadModel('desk', new THREE.Vector3(-5, 0, 5), new THREE.Vector3(1, 1, 1), new THREE.Euler(0, Math.PI/2, 0));
       // this.loadModel('chair', new THREE.Vector3(-5, 0, 7));
     }, 1000); // 1-second delay to ensure the room is loaded
+  }
+
+  loadRecompense () {
+    this.camera?.lookAt(new THREE.Vector3(0.7, 2.7, -1));
+    this.loadModel('trophy', new THREE.Vector3(0.7, 2.7, -1), new THREE.Vector3(5,5,5), new THREE.Euler(0,-2.6,0));
   }
 
   animate() {
