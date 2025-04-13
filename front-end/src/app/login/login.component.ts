@@ -3,13 +3,15 @@ import {HttpClient} from '@angular/common/http';
 import {Router} from '@angular/router';
 import {NgxSpinnerComponent, NgxSpinnerService} from 'ngx-spinner';
 import {NgIf} from '@angular/common';
+import {LoaderComponent} from '../loader/loader.component';
 
 @Component({
   selector: 'app-login',
   standalone: true,
   imports: [
     NgxSpinnerComponent,
-    NgIf
+    NgIf,
+    LoaderComponent
   ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss'
@@ -51,6 +53,7 @@ export class LogineComponent implements AfterViewInit, OnDestroy {
   capturePhoto(): void {
     const context = this.canvas.nativeElement.getContext('2d');
     if (context) {
+      this.isLoading = true
       context.drawImage(this.video.nativeElement, 0, 0, this.canvas.nativeElement.width, this.canvas.nativeElement.height);
       this.canvas.nativeElement.toBlob((blob: Blob) => {
         if (blob) {
@@ -65,7 +68,6 @@ export class LogineComponent implements AfterViewInit, OnDestroy {
   sendPhoto(photoBlob: Blob): void {
     const formData = new FormData();
     formData.append('photo', photoBlob, 'photo.jpg');
-    this.isLoading = true
     this.http.post('http://localhost:3000/api/login', formData).subscribe(
       (response:any) => {
         this.isLoading = false
@@ -73,6 +75,7 @@ export class LogineComponent implements AfterViewInit, OnDestroy {
         this.route.navigate(['/landing'])
       },
       (error) => {
+        this.isLoading = false
         console.error('Login error:', error);
       }
     );
