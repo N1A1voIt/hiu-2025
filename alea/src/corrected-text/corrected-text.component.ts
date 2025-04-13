@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 @Component({
   selector: 'app-corrected-text',
@@ -8,8 +8,9 @@ import { Component } from '@angular/core';
   styleUrl: './corrected-text.component.css',
 })
 export class CorrectedTextComponent {
-  textCorrected: string =
-    'Lorem ipsum dolor sit amet consectetur adipiscing elit.Lorem ipsum dolor sit amet consectetur adipiscing elit.Lorem ipsum dolor sit amet consectetur adipiscing elit.';
+  @Input() textCorrected: string = '';
+  // textCorrected: string =
+  //   'Lorem ipsum dolor sit amet consectetur adipiscing elit.Lorem ipsum dolor sit amet consectetur adipiscing elit.Lorem ipsum dolor sit amet consectetur adipiscing elit.';
   displayedText: string = '';
   typingIndex: number = 0;
   typingSpeed: number = 40;

@@ -1,4 +1,14 @@
-<div class="flex flex-row gap-4">
-  <app-textarea-to-correct></app-textarea-to-correct>
-  <app-corrected-text></app-corrected-text>
+<div
+  class="flex flex-row gap-8 p-6 bg-gradient-to-br from-gray-100 to-white rounded-2xl shadow-xl animate-fade-in overflow-hidden relative"
+>
+  <div
+    class="w-1/2 transform transition-transform duration-500 hover:scale-105"
+  >
+    <app-textarea-to-correct></app-textarea-to-correct>
+  </div>
+
+  <!-- Container avec animation différée -->
+  <div class="w-1/2 corrected-container opacity-0 animate-delayed-fade-in">
+    <app-corrected-text [textCorrected]="'Helooooooo'"></app-corrected-text>
+  </div>
 </div>
