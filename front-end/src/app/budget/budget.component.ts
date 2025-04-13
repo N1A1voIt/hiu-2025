@@ -1,8 +1,10 @@
 import {Component, OnInit} from '@angular/core';
 import {AngularFirestore} from '@angular/fire/compat/firestore';
-import {CurrencyPipe, NgForOf} from '@angular/common';
+import {CurrencyPipe, NgForOf, NgIf, NgStyle} from '@angular/common';
 import {FileClipComponent} from '../components/file-clip/file-clip.component';
 import {FinanceComponent} from '../finance-bg/finance.component';
+import {RouterLink, RouterLinkActive} from '@angular/router';
+import {VideoAnalyzerComponent} from '../video-analyzer/video-analyzer.component';
 import {ChatService} from '../../services/chat.service';
 
 @Component({
@@ -12,7 +14,12 @@ import {ChatService} from '../../services/chat.service';
     NgForOf,
     CurrencyPipe,
     FileClipComponent,
-    FinanceComponent
+    FinanceComponent,
+    NgIf,
+    RouterLinkActive,
+    VideoAnalyzerComponent,
+    RouterLink,
+    NgStyle
   ],
   templateUrl: './budget.component.html',
   styleUrl: './budget.component.scss'

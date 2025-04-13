@@ -3,12 +3,16 @@ import { io } from 'socket.io-client';
 import { Hands, Results } from '@mediapipe/hands';
 import { Camera } from '@mediapipe/camera_utils';
 import { drawConnectors, drawLandmarks } from '@mediapipe/drawing_utils';
+import {NgForOf, NgIf} from '@angular/common';
 
 @Component({
   selector: 'app-clipboard',
   templateUrl: './clipboard.component.html',
   standalone: true,
-  imports: [],
+  imports: [
+    NgForOf,
+    NgIf
+  ],
   styleUrls: ['./clipboard.component.css']
 })
 export class ClipboardComponent implements OnInit, AfterViewInit {
@@ -17,20 +21,43 @@ export class ClipboardComponent implements OnInit, AfterViewInit {
   @ViewChild('canvasOutput') canvasElement!: ElementRef;
   socket: any;
   isDragging = false;
+  @ViewChild('fileInput') fileInput!: ElementRef;
+  selectedFile: File | null = null;
+  fileContent: ArrayBuffer | string | null = null;
+  efaLasa : boolean = false
+  receivedFiles: any[] = [];
 
   constructor(private renderer: Renderer2) {}
   devices: any[] = [];
 
   ngOnInit(): void {
-    this.socket = io('http://10.200.54.22:3000');
+    this.socket = io('http://10.200.50.168:3000');
     this.socket.emit('register', { name: 'Nyavo\'s Phone', type: 'mobile' });
     this.socket.on('updateDevices', (deviceList: any[]) => {
       this.devices = deviceList.filter(d => d.id !== this.socket.id);
     });
     this.socket.on('clipboard', (data: any) => {
-      alert('Received: ' + JSON.stringify(data));
+      this.receivedFiles.push(data);
+      this.showTeaser(data);
+
+      // alert('Received: ' + JSON.stringify(data));
     });
   }
+
+  showPopup = false; // Visibility state of the popup
+  popupFile: any = null;
+
+  showTeaser(file: any): void {
+    this.popupFile = file; // Assign file to popup
+    this.showPopup = true; // Show the popup
+  }
+
+  // Close popup
+  closePopup(): void {
+    this.showPopup = false;
+    this.popupFile = null;
+  }
+
 
   async ngAfterViewInit(): Promise<void> {
     await this.setupMediaPipeHands();
@@ -72,6 +99,7 @@ export class ClipboardComponent implements OnInit, AfterViewInit {
   private wasFisting = false;
 
   private onHandResults(results: Results): void {
+    if (this.efaLasa) return;
     if (!results.multiHandLandmarks || results.multiHandLandmarks.length === 0) {
       this.wasFisting = false;
       this.isDragging = false;
@@ -92,15 +120,33 @@ export class ClipboardComponent implements OnInit, AfterViewInit {
 
     }
 
+    // if (!isFisting && this.wasFisting && this.isDragging) {
+    //   console.log("Fist end detected");
+    //   this.isDragging = false;
+    //   this.hasSentData = true;
+    //   this.socket.emit('clipboard', {
+    //     type: 'text',
+    //     content: 'This is the data'
+    //   });
+    //   console.log("Data sent!");
+    // }
+    // this.wasFisting = isFisting;
     if (!isFisting && this.wasFisting && this.isDragging) {
       console.log("Fist end detected");
       this.isDragging = false;
-      this.hasSentData = true;
-      this.socket.emit('clipboard', {
-        type: 'text',
-        content: 'This is the data'
-      });
-      console.log("Data sent!");
+
+      if (!this.hasSentData && this.selectedFile && this.fileContent) {
+        this.hasSentData = true;
+        this.socket.emit('clipboard', {
+          type: 'file',
+          fileName: this.selectedFile.name,
+          fileType: this.selectedFile.type,
+          fileSize: this.selectedFile.size,
+          content: this.fileContent
+        });
+        console.log("File sent!");
+        this.efaLasa = true;
+      }
     }
     this.wasFisting = isFisting;
   }
@@ -138,9 +184,46 @@ export class ClipboardComponent implements OnInit, AfterViewInit {
       canvasCtx.restore();
     }
   }
+  //
+  // sendTo(targetId: string): void {
+  //   this.socket.emit('clipboard', { targetId, data: { type: 'text', content: 'This is the data' } });
+  // }
+  onFileSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    if (input.files && input.files[0]) {
+      this.selectedFile = input.files[0];
+      this.readFile(this.selectedFile);
+    }
+  }
 
+  private readFile(file: File): void {
+    const reader = new FileReader();
+
+    reader.onload = (e) => {
+      this.fileContent = e.target?.result as ArrayBuffer;
+    };
+
+    // For binary files
+    reader.readAsArrayBuffer(file);
+
+    // Alternative for text-based files:
+    // reader.readAsDataURL(file);
+  }
+
+  // Update sendTo method
   sendTo(targetId: string): void {
-    this.socket.emit('clipboard', { targetId, data: { type: 'text', content: 'This is the data' } });
+    if (this.selectedFile && this.fileContent) {
+      this.socket.emit('clipboard', {
+        targetId,
+        data: {
+          type: 'file',
+          fileName: this.selectedFile.name,
+          fileType: this.selectedFile.type,
+          fileSize: this.selectedFile.size,
+          content: this.fileContent
+        }
+      });
+    }
   }
 }
 
