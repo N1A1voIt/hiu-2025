@@ -29,7 +29,7 @@
     <!--                            [label]="isModificationMode ? 'Exit Edit Mode' : 'Edit Mode'"></app-action-btn>-->
             </div>
         </div>
-        <app-study-helper *ngIf="isStudyingMode"></app-study-helper>
+        <app-study-helper *ngIf="isStudyingMode" [displayReward]="loadRecompense"></app-study-helper>
 
     </div>
 
