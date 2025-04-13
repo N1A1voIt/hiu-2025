@@ -5,13 +5,15 @@ import {JsonPipe, NgIf} from '@angular/common';
 import * as tf from '@tensorflow/tfjs';
 import {Subscription} from 'rxjs';
 import {ChatService} from '../../services/chat.service';
+import {LoaderComponent} from "../loader/loader.component";
 
 @Component({
   selector: 'app-video-analyzer',
   standalone: true,
   imports: [
     JsonPipe,
-    NgIf
+    NgIf,
+    LoaderComponent
   ],
   templateUrl: './video-analyzer.component.html',
   styleUrl: './video-analyzer.component.scss'
@@ -20,6 +22,8 @@ export class VideoAnalyzerComponent implements OnInit{
   @ViewChild('capturedVideo') videoElement!: ElementRef<HTMLVideoElement>;
   @ViewChild('canvasElement') canvasElement!: ElementRef<HTMLCanvasElement>;
   private subscription = new Subscription();
+
+  isLoading: boolean = false;
 
   faceData: any = [];
   isCapturing: boolean = false;
@@ -59,6 +63,7 @@ export class VideoAnalyzerComponent implements OnInit{
 
   stopCapture() {
     this.captureService.stopCapture();
+    this.isLoading = true;
     console.log("FACE DATA DANS VIDEO ANALYZER", this.faceData);
     this.chatService.sendMessage(JSON.stringify(this.faceData)).subscribe({
       next: (value) => {
@@ -68,6 +73,7 @@ export class VideoAnalyzerComponent implements OnInit{
         const details = jsonResponse.details;
         this.responseText = details;
         console.log('Response:', this.responseText);
+        this.isLoading = false;
         this.isModal = !this.isModal;
       }
     });
