@@ -74,6 +74,7 @@ export class ChatService {
   ) { }
 
   sendMessage(text: string): Observable<ChatMessage[]> {
+    let prompt = "ampianaro aho ny momban'ny tantara ny Madagasikara, "+ text;
     const body = {
       app_name: "unifamAgent",
       user_id: "u_123",
@@ -81,7 +82,7 @@ export class ChatService {
       new_message: {
         role: "user",
         parts: [
-          { text: text }
+          { text: prompt }
         ]
       }
     };
