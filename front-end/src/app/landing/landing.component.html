@@ -71,7 +71,11 @@
           </button>
         </div>
       </div>
+
       <div class="down">
+        <div class="w-[160px]">
+          <app-clipboard></app-clipboard>
+        </div>
         <div
           class="safeP"
           *ngIf="isClicked"
@@ -89,7 +93,8 @@
           </button>
         </div>
 
-        <div class="safeN" *ngIf="!isClicked">
+
+        <div class="safeN border px-2 w-[160px] h-[40px] rounded-2xl " *ngIf="!isClicked">
           <img src="/assets/img/img.png" alt="" />
           <button class="safePlace" (click)="clickSafe()">Safeplace</button>
         </div>
