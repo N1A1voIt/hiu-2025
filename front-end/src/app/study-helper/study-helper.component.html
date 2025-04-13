@@ -4,7 +4,7 @@
   <h2 class="text-3xl font-bold">Mazotoa mianatra!</h2>
   <div class="my-2">
     <div class="text-left overflow-y-scroll max-h-[800px]">
-      <p class="p-6 whitespace-pre-wrap font-mono" *ngIf="displayedText">
+      <p class="p-6 whitespace-pre-wrap font-mono max-h-[60dvh] overflow-y-scroll" *ngIf="displayedText">
         {{ displayedText }}<span class="animate-pulse">|</span>
       </p>
     </div>
@@ -37,3 +37,5 @@
     </button>
   </div>
 </div>
+
+<app-loader *ngIf="isLoading"></app-loader>

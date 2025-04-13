@@ -6,6 +6,7 @@ import {FinanceComponent} from '../finance-bg/finance.component';
 import {RouterLink, RouterLinkActive} from '@angular/router';
 import {VideoAnalyzerComponent} from '../video-analyzer/video-analyzer.component';
 import {ChatService} from '../../services/chat.service';
+import {LoaderComponent} from '../loader/loader.component';
 
 @Component({
   selector: 'app-budget',
@@ -19,7 +20,8 @@ import {ChatService} from '../../services/chat.service';
     RouterLinkActive,
     VideoAnalyzerComponent,
     RouterLink,
-    NgStyle
+    NgStyle,
+    LoaderComponent
   ],
   templateUrl: './budget.component.html',
   styleUrl: './budget.component.scss'
@@ -29,6 +31,7 @@ export class BudgetComponent implements OnInit {
   totalExpenses: number = 0;
   isLoading: boolean = true;
   errorMessage: string | null = null;
+
 
   uploadedFile!: File;
 
@@ -105,14 +108,17 @@ export class BudgetComponent implements OnInit {
       console.log("cleann "+cleanText);
       response = JSON.parse(cleanText);
 
+      this.isLoading = true;
       this.uploadBudgetToFirestore(response)
         .then(() => {
           console.log('Budgets uploaded successfully');
           // You might want to show a success message to the user
+          this.isLoading = false;
         })
         .catch(error => {
           console.error('Failed to upload budgets:', error);
           this.errorMessage = 'Failed to upload the budget data. Please try again.';
+          this.isLoading = false;
         });
     }
   });
