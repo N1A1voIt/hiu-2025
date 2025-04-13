@@ -1,8 +1,9 @@
-import { Component, ElementRef, ViewChild } from '@angular/core';
+import {Component, ElementRef, Output, ViewChild} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { NgIf } from '@angular/common';
 import { FileClipComponent } from '../components/file-clip/file-clip.component';
 import {ChatService} from '../../services/chat.service';
+import EventEmitter from 'node:events';
 
 @Component({
   selector: 'app-study-helper',
@@ -18,6 +19,7 @@ export class StudyHelperComponent {
   responseText: string | null = null;
   displayedText: string = '';
   responseAudio: any = null;
+  reward = false;
 
   @ViewChild('textArea', { static: false }) textArea!: ElementRef;
 
