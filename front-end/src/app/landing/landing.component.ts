@@ -3,6 +3,7 @@ import { Component, ElementRef, Renderer2, ViewChild } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 import { CustomizableRoomComponent } from '../customizable-room/customizable-room.component';
 import { FamilyComponent } from '../family/family.component';
+import {VideoAnalyzerComponent} from '../video-analyzer/video-analyzer.component';
 
 @Component({
   selector: 'app-landing',
@@ -12,6 +13,7 @@ import { FamilyComponent } from '../family/family.component';
     CustomizableRoomComponent,
     FamilyComponent,
     RouterModule,
+    VideoAnalyzerComponent,
   ],
   templateUrl: './landing.component.html',
   styleUrl: './landing.component.scss',
@@ -97,7 +99,4 @@ export class LandingComponent {
     }
   }
 
-  clickModal() {
-    this.isModal = !this.isModal;
-  }
 }

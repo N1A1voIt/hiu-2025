@@ -68,7 +68,7 @@
           </button>
         </div>
         <div class="historique">
-          <button (click)="clickModal()">Emotion detection</button>
+          <app-video-analyzer></app-video-analyzer>
         </div>
         <div class="historique">
           <button>Play</button>
@@ -98,61 +98,5 @@
         </div>
       </div>
     </section>
-  </article>
-  <article
-    class="modal fixed inset-0 flex items-center justify-center z-50"
-    *ngIf="isModal"
-  >
-    <!-- Overlay arrière-plan flouté -->
-    <div class="absolute inset-0 bg-black/30 backdrop-blur-md"></div>
-
-    <!-- Contenu du modal avec effet glassmorphisme -->
-    <div
-      class="relative w-11/12 max-w-md bg-white/20 backdrop-blur-lg rounded-xl shadow-lg border border-white/30 overflow-hidden"
-    >
-      <!-- En-tête du modal -->
-      <div class="p-6 border-b border-white/20">
-        <div class="flex justify-between items-center">
-          <h3 class="text-xl font-medium text-white">Emotionnal test</h3>
-          <button
-            class="text-gray-200 hover:text-white transition-colors"
-            (click)="clickModal()"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-6 w-6"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M6 18L18 6M6 6l12 12"
-              />
-            </svg>
-          </button>
-        </div>
-      </div>
-
-      <!-- Corps du modal -->
-      <div class="p-6 text-white">
-        <p class="mb-4">Avy niantso an'i Bertine ianao teo.</p>
-        <p>Narary fo be ilay olona teo.</p>
-      </div>
-
-      <!-- Pied du modal avec boutons d'action -->
-      <div
-        class="p-4 bg-white/10 border-t border-white/20 flex justify-end space-x-3"
-      >
-        <button
-          class="px-4 py-2 bg-terracota hover:bg-blue-700/70 text-white rounded-md backdrop-blur-sm transition-colors"
-          (click)="clickModal()"
-        >
-          Eny ary
-        </button>
-      </div>
-    </div>
   </article>
 </main>
