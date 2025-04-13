@@ -137,7 +137,47 @@ export class ChatService {
     });
   }
 
-  sendMessageWithFileDep(text: string, file: File): Observable<ChatResponse[]> {
+  sendMessageWithFileDep(text: string, file: File): Observable<ChatMessage[]> {
+    return new Observable<ChatMessage[]>(observer => {
+      const reader = new FileReader();
+
+      reader.onload = () => {
+        const base64Data = (reader.result as string).split(',')[1]; // remove "data:image/png;base64,"
+        let prompt = text;
+        const body = {
+          app_name: "unifamAgent",
+          user_id: "u_123",
+          session_id: "s_123",
+          new_message: {
+            role: "user",
+            parts: [
+              {text: prompt},
+              {
+                inline_data: {
+                  mime_type: "image/png",
+                  data: `${base64Data}`
+                }
+              }
+            ]
+          }
+        };
+
+        const headers = new HttpHeaders({
+          'Content-Type': 'application/json'
+        });
+
+        return this.http.post<ChatMessage[]>('/api/run', body, { headers }).subscribe({
+          next: (res) => observer.next(res),
+          error: (err) => observer.error(err),
+          complete: () => observer.complete()
+        });
+      };
+
+      reader.onerror = (err) => observer.error(err);
+      reader.readAsDataURL(file); // ⬅️ reads the file and triggers the onload with base64
+    });
+  }
+  /*sendMessageWithFileDep(text: string, file: File): Observable<ChatResponse[]> {
     return new Observable<ChatResponse[]>(observer => {
       const reader = new FileReader();
 
@@ -194,5 +234,5 @@ export class ChatService {
 
       reader.readAsDataURL(file); // Convert File to base64
     });
-  }
+  }*/
 }
