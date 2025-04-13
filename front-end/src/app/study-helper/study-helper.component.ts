@@ -1,4 +1,4 @@
-import {Component, ElementRef, Output, ViewChild} from '@angular/core';
+import {Component, ElementRef, Input, Output, ViewChild} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { NgIf } from '@angular/common';
 import { FileClipComponent } from '../components/file-clip/file-clip.component';
@@ -19,9 +19,12 @@ export class StudyHelperComponent {
   responseText: string | null = null;
   displayedText: string = '';
   responseAudio: any = null;
+  calls: number = 0;
   reward = false;
 
   @ViewChild('textArea', { static: false }) textArea!: ElementRef;
+
+  @Input() displayReward: () => void = () => {};
 
   typingIndex: number = 0;
   typingSpeed: number = 20; // ms per character
@@ -50,16 +53,17 @@ export class StudyHelperComponent {
   onSubmit(): void {
     console.log("atooooo");
     this.submittedText = this.inputText;
+    this.calls++;
     if (this.uploadedFile) {
       console.log('File:', this.uploadedFile);
-        this.chatService.sendMessageWithFile(this.submittedText,this.uploadedFile).subscribe({
-          next: ( value) => {
-            this.responseText = value[0].content.parts[0].text;
-            this.displayedText = '';
-            this.typingIndex = 0;
-            this.typeText();
-          }
-        });
+      this.chatService.sendMessageWithFile(this.submittedText,this.uploadedFile).subscribe({
+        next: ( value) => {
+          this.responseText = value[0].content.parts[0].text;
+          this.displayedText = '';
+          this.typingIndex = 0;
+          this.typeText();
+        }
+      });
     }
     else{
       this.chatService.sendMessage(this.submittedText).subscribe({
@@ -71,6 +75,10 @@ export class StudyHelperComponent {
           this.typeText();
         }
       });
+    }
+
+    if (this.calls == 2) {
+      this.displayReward();
     }
     console.log('Text:', this.inputText);
     this.inputText = '';
