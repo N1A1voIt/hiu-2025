@@ -5,6 +5,7 @@ import {FileClipComponent} from '../components/file-clip/file-clip.component';
 import {FinanceComponent} from '../finance-bg/finance.component';
 import {RouterLink, RouterLinkActive} from '@angular/router';
 import {VideoAnalyzerComponent} from '../video-analyzer/video-analyzer.component';
+import {ChatService} from '../../services/chat.service';
 
 @Component({
   selector: 'app-budget',
@@ -31,7 +32,7 @@ export class BudgetComponent implements OnInit {
 
   uploadedFile!: File;
 
-  constructor(private firestore: AngularFirestore) {}
+  constructor(private firestore: AngularFirestore,private chatService: ChatService,) {}
 
   ngOnInit(): void {
     this.fetchBudgets();
@@ -61,52 +62,62 @@ export class BudgetComponent implements OnInit {
       .reduce((sum, budget) => sum + parseFloat(budget.total || 0), 0);
   }
 
-  uploadBudgetsToFirestore(budgetItems: any[]): Promise<void[]> {
+  uploadBudgetToFirestore(budgetItem: any): Promise<void> {
     try {
-      // Create an array of promises for batch processing
-      const uploadPromises = budgetItems.map(item => {
-        // Generate a unique ID for the document or use one if provided
-        const docId = item.id || this.firestore.createId();
+      // Generate a unique ID for the document or use one if provided
+      const docId = budgetItem.id || this.firestore.createId();
 
-        // Add timestamp for when the budget item was created
-        const budgetWithTimestamp = {
-          ...item
-        };
+      // Optionally add a timestamp or any other data processing
+      const budgetWithTimestamp = {
+        ...budgetItem
+      };
 
-        // Return the promise of setting the document
-        return this.firestore.collection('budget').doc(docId).set(budgetWithTimestamp);
-      });
-
-      // Return a promise that resolves when all uploads are complete
-      return Promise.all(uploadPromises);
+      // Return the promise for uploading the single item
+      return this.firestore.collection('budget').doc(docId).set(budgetWithTimestamp);
     } catch (error) {
-      console.error('Error uploading budget items:', error);
-      throw error;
+      console.error('Error uploading budget item:', error);
+      return Promise.reject(error);
     }
   }
+
 
   uploadFile(event: any): void {
     this.uploadedFile = event.target.files[0];
 
     // call ocr or idk
 
-    const response = [{
+   let response = {
       "total": 2000,
       "type": "expense",
       "title": "title of the receipt",
       "description": "description of the receipt",
       "details":"details of the receipt",
-    }]
+    }
 
-    this.uploadBudgetsToFirestore(response)
-      .then(() => {
-        console.log('Budgets uploaded successfully');
-        // You might want to show a success message to the user
-      })
-      .catch(error => {
-        console.error('Failed to upload budgets:', error);
-        this.errorMessage = 'Failed to upload the budget data. Please try again.';
-      });
+  this.chatService.sendMessageWithFileDep("azavao",this.uploadedFile).subscribe({
+    next: (value) => {
+      let ind = 0;
+      if (value.length > 1) {
+        ind = 2;
+      }
+      const rawText = value[ind].content.parts[0].text;
+      const cleanText = rawText.replace(/```json|```/g, '').trim();
+      console.log("cleann "+cleanText);
+      response = JSON.parse(cleanText);
+
+      this.uploadBudgetToFirestore(response)
+        .then(() => {
+          console.log('Budgets uploaded successfully');
+          // You might want to show a success message to the user
+        })
+        .catch(error => {
+          console.error('Failed to upload budgets:', error);
+          this.errorMessage = 'Failed to upload the budget data. Please try again.';
+        });
+    }
+  });
+
+
   }
 
   protected readonly alert = alert;
