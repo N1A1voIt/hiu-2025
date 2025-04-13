@@ -8,7 +8,8 @@ import { Component } from '@angular/core';
   styleUrl: './corrected-text.component.css',
 })
 export class CorrectedTextComponent {
-  textCorrected: string = 'Lorem Ipsum dolores....';
+  textCorrected: string =
+    'Lorem ipsum dolor sit amet consectetur adipiscing elit.Lorem ipsum dolor sit amet consectetur adipiscing elit.Lorem ipsum dolor sit amet consectetur adipiscing elit.';
   displayedText: string = '';
   typingIndex: number = 0;
   typingSpeed: number = 40;
