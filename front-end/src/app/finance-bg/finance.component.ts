@@ -13,7 +13,7 @@ export class FinanceComponent implements AfterViewInit {
     const canvas = document.getElementById('canvas3d') as HTMLCanvasElement;
     if (canvas) {
       const app = new Application(canvas);
-      app.load('https://prod.spline.design/B1sss3NlBTWO51Ku/scene.splinecode');
+      app.load('https://prod.spline.design/frb9P-X3CGZJ2x9U/scene.splinecode');
     } else {
       console.error('Canvas element not found');
     }
