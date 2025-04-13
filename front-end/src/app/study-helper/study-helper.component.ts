@@ -4,11 +4,12 @@ import { NgIf } from '@angular/common';
 import { FileClipComponent } from '../components/file-clip/file-clip.component';
 import {ChatService} from '../../services/chat.service';
 import EventEmitter from 'node:events';
+import {LoaderComponent} from '../loader/loader.component';
 
 @Component({
   selector: 'app-study-helper',
   standalone: true,
-  imports: [FormsModule, NgIf, FileClipComponent],
+  imports: [FormsModule, NgIf, FileClipComponent, LoaderComponent],
   templateUrl: './study-helper.component.html',
   styleUrl: './study-helper.component.scss',
 })
@@ -21,6 +22,8 @@ export class StudyHelperComponent {
   responseAudio: any = null;
   calls: number = 0;
   reward = false;
+
+  isLoading: boolean = false;
 
   @ViewChild('textArea', { static: false }) textArea!: ElementRef;
 
@@ -54,11 +57,15 @@ export class StudyHelperComponent {
     console.log("atooooo");
     this.submittedText = this.inputText;
     this.calls++;
+
+    this.isLoading = true
+
     if (this.uploadedFile) {
       console.log('File:', this.uploadedFile);
       this.chatService.sendMessageWithFile(this.submittedText,this.uploadedFile).subscribe({
         next: ( value) => {
           this.responseText = value[0].content.parts[0].text;
+          this.isLoading = false;
           this.displayedText = '';
           this.typingIndex = 0;
           this.typeText();
@@ -70,6 +77,7 @@ export class StudyHelperComponent {
         next: ( value) => {
           this.responseText = value[0].content.parts[0].text;
           console.log('Response:', this.responseText);
+          this.isLoading = false;
           this.displayedText = '';
           this.typingIndex = 0;
           this.typeText();
