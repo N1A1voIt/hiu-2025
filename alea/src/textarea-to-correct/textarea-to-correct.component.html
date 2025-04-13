@@ -1,8 +1,20 @@
-<div class="content">
-  <div
-    class="w-[50dvw] h-[80dvh] bg-white rounded-xl shadow-lg p-6 overflow-auto border border-gray-300"
-  >
-    <textarea [(ngModel)]="inputText" #textArea class="w-full h-full border border-gray-700 p-4 rounded-lg"></textarea>
-    <button (click)="onSubmit()" class="bg-blue-600 hover:bg-blue-800 text-white p-4 rounded-lg">Vérifier</button>
+<div class="content flex justify-center items-center min-h-screen bg-gradient-to-tr from-gray-100 to-white px-4">
+  <div class="w-[90vw] md:w-[50dvw] h-[80dvh] bg-white rounded-2xl shadow-2xl p-6 border border-gray-200 hover:shadow-[0_10px_40px_rgba(0,0,0,0.1)] transition-shadow duration-500 flex flex-col gap-4 backdrop-blur-md">
+    
+    <label class="text-lg font-semibold text-gray-700">Votre texte à corriger</label>
+
+    <textarea
+      [(ngModel)]="inputText"
+      #textArea
+      class="flex-grow resize-none border border-gray-300 rounded-xl p-4 text-gray-800 focus:outline-none focus:ring-4 focus:ring-blue-300 transition duration-300 shadow-inner"
+      placeholder="Tapez votre texte ici..."
+    ></textarea>
+
+    <button
+      (click)="onSubmit()"
+      class="bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white text-lg font-medium py-3 rounded-xl shadow-md hover:shadow-xl transition-all duration-300"
+    >
+      ✅ Vérifier le texte
+    </button>
   </div>
 </div>
