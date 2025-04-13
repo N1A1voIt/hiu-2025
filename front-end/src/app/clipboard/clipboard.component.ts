@@ -30,6 +30,7 @@ export class ClipboardComponent implements OnInit, AfterViewInit {
   constructor(private renderer: Renderer2) {}
   devices: any[] = [];
 
+
   ngOnInit(): void {
     this.socket = io('http://10.200.50.168:3000');
     this.socket.emit('register', { name: 'Nyavo\'s Phone', type: 'mobile' });
@@ -62,7 +63,7 @@ export class ClipboardComponent implements OnInit, AfterViewInit {
     a.download = file.fileName;
     a.click();
     alert("Downloading")
-    // Clean up the temporary URL object
+
     window.URL.revokeObjectURL(url);
   }
 
@@ -72,9 +73,9 @@ export class ClipboardComponent implements OnInit, AfterViewInit {
 
   showTeaser(file: any): void {
     this.popupFile = file; // Assign file to popup
+    this.downloadFile(file)
     alert(JSON.stringify(file.content))
     this.showPopup = true; // Show the popup
-    this.downloadFile(file)
   }
 
   // Close popup
@@ -223,19 +224,14 @@ export class ClipboardComponent implements OnInit, AfterViewInit {
 
   private readFile(file: File): void {
     const reader = new FileReader();
-
     reader.onload = (e) => {
       this.fileContent = e.target?.result as ArrayBuffer;
     };
 
-    // For binary files
     reader.readAsArrayBuffer(file);
-
-    // Alternative for text-based files:
-    // reader.readAsDataURL(file);
+    reader.readAsDataURL(file);
   }
 
-  // Update sendTo method
   sendTo(targetId: string): void {
     if (this.selectedFile && this.fileContent) {
       this.socket.emit('clipboard', {
