@@ -31,14 +31,17 @@ export class StudyHelperComponent {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
 
-      reader.readAsDataURL(file); // Includes the MIME prefix
-
       reader.onload = () => {
-        const base64 = reader.result as string; // Full base64 like data:image/png;base64,...
-        resolve(base64);
+        // reader.result is something like: "data:image/png;base64,iVBORw0KGgo..."
+        const base64String = (reader.result as string).split(',')[1]; // Remove "data:*/*;base64,"
+        resolve(base64String);
       };
 
-      reader.onerror = error => reject(error);
+      reader.onerror = (error) => {
+        reject(error);
+      };
+
+      reader.readAsDataURL(file);
     });
   }
 
@@ -47,9 +50,7 @@ export class StudyHelperComponent {
     this.submittedText = this.inputText;
     if (this.uploadedFile) {
       console.log('File:', this.uploadedFile);
-      let file="";
-      this.convertFileToBase64(this.uploadedFile).then(base64String => {
-        this.chatService.sendMessageWithFile(this.submittedText,file).subscribe({
+        this.chatService.sendMessageWithFile(this.submittedText,this.uploadedFile).subscribe({
           next: ( value) => {
             this.responseText = value[0].content.parts[0].text;
             this.displayedText = '';
@@ -57,7 +58,6 @@ export class StudyHelperComponent {
             this.typeText();
           }
         });
-      });
     }
     else{
       this.chatService.sendMessage(this.submittedText).subscribe({
