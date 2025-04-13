@@ -12,4 +12,9 @@ import {TextareaToCorrectComponent} from '../textarea-to-correct/textarea-to-cor
 })
 export class AppComponent {
   title = 'alea';
+  correctedText: string;
+
+  setCorrectedText: (text: string) => void = {
+    this.correctedText = text;
+  };
 }
