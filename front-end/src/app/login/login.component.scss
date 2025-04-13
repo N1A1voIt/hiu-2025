@@ -17,7 +17,7 @@ main {
   gap: 10px;
 }
 .left header {
-  background-color: #ffff;
+  background-color: rgb(232,226,216);
   display: flex;
   flex-direction: row;
   position: relative;
@@ -64,7 +64,7 @@ main {
 }
 .left .title .google:hover {
   background-color: orange;
-  color: #ffff;
+  color: rgb(232,226,216);
 }
 .left .title .google img {
   width: 20px;
@@ -162,7 +162,7 @@ main {
   height: 15px;
   border: 2px solid var(#000, orange);
   border-radius: 4px;
-  background-color: #ffff;
+  background-color: rgb(232,226,216);
   cursor: pointer;
   display: flex;
   justify-content: center;
@@ -175,7 +175,7 @@ main {
 }
 .left .plus .remember input[type="checkbox"]:checked::before {
   content: "";
-  color: #ffff;
+  color: rgb(232,226,216);
   font-size: 0.8em;
   display: block;
 }
@@ -209,14 +209,14 @@ main {
 .left .btn-f {
   border: 2px solid orange;
   background-color: orange;
-  color: #ffff;
+  color: rgb(232,226,216);
   padding: 4px 8px;
   cursor: pointer;
   transition: 0.1s ease-in-out;
 }
 .left .btn-f:hover {
   border: 2px solid orange;
-  background-color: #ffff;
+  background-color: rgb(232,226,216);
   color: orange;
 }
 
@@ -252,7 +252,7 @@ main {
   position: absolute;
   content: "";
   height: 60px;
-  background-color: #ffff;
+  background-color: rgb(232,226,216);
   width: 60px;
   bottom: 0;
   right: 0;
@@ -265,7 +265,7 @@ main {
   width: 20px;
   aspect-ratio: 1;
   /* background-color: red; */
-  background: radial-gradient(circle 20px at top left, #f1060600 98%, #ffff 0%);
+  background: radial-gradient(circle 20px at top left, #f1060600 98%, rgb(232,226,216) 0%);
 }
 .right .pic .dzgn .bas::before {
   bottom: 0;
@@ -281,7 +281,7 @@ main {
   position: absolute;
   content: "";
   height: 60px;
-  background-color: #ffff;
+  background-color: rgb(232,226,216);
   width: 60px;
   top: 0;
   left: 0;
@@ -297,7 +297,7 @@ main {
   background: radial-gradient(
     circle 20px at bottom right,
     #f1060600 98%,
-    #ffff 0%
+    rgb(232,226,216) 0%
   );
 }
 .right .pic .dzgn .top::before {
@@ -320,7 +320,7 @@ main {
   transform: translateX(-50%);
 }
 .right .text h1 {
-  color: #ffff;
+  color: rgb(232,226,216);
   font-weight: 600;
   font-style: normal;
   font-size: 3em;
@@ -332,6 +332,6 @@ main {
 .right .text p {
   text-align: center;
   width: 400px;
-  color: #ffff;
+  color: rgb(232,226,216);
   font-size: 0.9em;
 }
