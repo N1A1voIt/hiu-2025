@@ -10,7 +10,24 @@
 <!--      class="w-[100dvw] h-[100dvh] object-cover"-->
 <!--    />-->
   </div>
-
+  <section class="right">
+    <div class="up">
+      <div class="historique">
+        <button
+          [routerLink]="['/budget']"
+          routerLinkActive="router-link-active"
+        >
+          Budget
+        </button>
+      </div>
+      <div class="historique">
+        <app-video-analyzer></app-video-analyzer>
+      </div>
+      <div class="historique">
+        <button>Play</button>
+      </div>
+    </div>
+  </section>
   <div class="content">
     <div class="info">
       <div class="contenu">
