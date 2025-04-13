@@ -28,7 +28,7 @@ export class LandingComponent {
   isAnimating: boolean = false;
   isAnimatingChat: boolean = false;
   isModal: boolean = false;
-  userName:string = JSON.parse(<string>localStorage.getItem('user')).userName || '';
+  userName:string = JSON.parse(<string>localStorage.getItem('user'))?.userName || '';
   isGrowing: boolean = false;
 
   roomWidth: number = 500;
