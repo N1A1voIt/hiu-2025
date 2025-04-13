@@ -2,7 +2,58 @@
   <video #capturedVideo autoplay playsinline></video>
   <canvas #canvasElement></canvas>
   <div class="controls">
-    <button (click)="startCapture()">Capturer Teams</button>
-    <button (click)="stopCapture()">Arrêter la capture</button>
   </div>
 </div>
+<button (click)="toggleCapture()">{{ isCapturing ? 'Ajanona' : 'Haka horonan-tsary' }}</button>
+
+<article
+        class="modal fixed inset-0 flex items-center justify-center z-50"
+        *ngIf="isModal"
+>
+    <div class="absolute inset-0 bg-black/30 backdrop-blur-md"></div>
+
+    <div
+            class="relative w-11/12 max-w-md bg-white/20 backdrop-blur-lg rounded-xl shadow-lg border border-white/30 overflow-hidden"
+    >
+        <!-- En-tête du modal -->
+        <div class="p-6 border-b border-white/20">
+            <div class="flex justify-between items-center">
+                <h3 class="text-xl font-medium text-white">Ny tokony ho ataonao</h3>
+                <button
+                        class="text-gray-200 hover:text-white transition-colors"
+                        (click)="clickModal()"
+                >
+                    <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            class="h-6 w-6"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                    >
+                        <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M6 18L18 6M6 6l12 12"
+                        />
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <div class="p-6 text-white">
+            <p class="mb-4">{{responseText}}.</p>
+        </div>
+
+        <div
+                class="p-4 bg-white/10 border-t border-white/20 flex justify-end space-x-3"
+        >
+            <button
+                    class="px-4 py-2 bg-terracota hover:bg-blue-700/70 text-white rounded-md backdrop-blur-sm transition-colors"
+                    (click)="clickModal()"
+            >
+                Eny ary
+            </button>
+        </div>
+    </div>
+</article>

@@ -1,8 +1,9 @@
-import { Component, ElementRef, ViewChild } from '@angular/core';
+import {Component, ElementRef, Input, Output, ViewChild} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { NgIf } from '@angular/common';
 import { FileClipComponent } from '../components/file-clip/file-clip.component';
 import {ChatService} from '../../services/chat.service';
+import EventEmitter from 'node:events';
 
 @Component({
   selector: 'app-study-helper',
@@ -18,8 +19,12 @@ export class StudyHelperComponent {
   responseText: string | null = null;
   displayedText: string = '';
   responseAudio: any = null;
+  calls: number = 0;
+  reward = false;
 
   @ViewChild('textArea', { static: false }) textArea!: ElementRef;
+
+  @Input() displayReward: () => void = () => {};
 
   typingIndex: number = 0;
   typingSpeed: number = 20; // ms per character
@@ -31,32 +36,33 @@ export class StudyHelperComponent {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
 
-      reader.readAsDataURL(file); // Includes the MIME prefix
-
       reader.onload = () => {
-        const base64 = reader.result as string; // Full base64 like data:image/png;base64,...
-        resolve(base64);
+        // reader.result is something like: "data:image/png;base64,iVBORw0KGgo..."
+        const base64String = (reader.result as string).split(',')[1]; // Remove "data:*/*;base64,"
+        resolve(base64String);
       };
 
-      reader.onerror = error => reject(error);
+      reader.onerror = (error) => {
+        reject(error);
+      };
+
+      reader.readAsDataURL(file);
     });
   }
 
   onSubmit(): void {
     console.log("atooooo");
     this.submittedText = this.inputText;
+    this.calls++;
     if (this.uploadedFile) {
       console.log('File:', this.uploadedFile);
-      let file="";
-      this.convertFileToBase64(this.uploadedFile).then(base64String => {
-        this.chatService.sendMessageWithFile(this.submittedText,file).subscribe({
-          next: ( value) => {
-            this.responseText = value[0].content.parts[0].text;
-            this.displayedText = '';
-            this.typingIndex = 0;
-            this.typeText();
-          }
-        });
+      this.chatService.sendMessageWithFile(this.submittedText,this.uploadedFile).subscribe({
+        next: ( value) => {
+          this.responseText = value[0].content.parts[0].text;
+          this.displayedText = '';
+          this.typingIndex = 0;
+          this.typeText();
+        }
       });
     }
     else{
@@ -69,6 +75,10 @@ export class StudyHelperComponent {
           this.typeText();
         }
       });
+    }
+
+    if (this.calls == 2) {
+      this.displayReward();
     }
     console.log('Text:', this.inputText);
     this.inputText = '';

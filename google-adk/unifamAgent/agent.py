@@ -35,6 +35,21 @@ ocr_agent = LlmAgent(
     tools=[],
 )
 
+emotion_agent = LlmAgent(
+    model="gemini-2.0-flash-exp",
+    name="emotion_agent",
+    instruction="""You are an emotion agent, all you do is scanning an array [['happy', 0.99], ['sad', 0.01], ...],
+        give me the emotion that has the highest mean and then analyze the emotion and give me a description of that emotion in Malagasy
+        and give me a JSON Response:
+        {
+            "emotion": "happy",
+            "details": "which emotion the person has and how should I handle it",
+        }
+        """,
+
+    description="Malagasy emotion agent",
+    tools=[],
+)
 
 root_agent = LlmAgent(
     name="unifam_agent",
@@ -42,5 +57,5 @@ root_agent = LlmAgent(
     instruction=(
         f"""Use "{family_agent} or if the child wants to learn use {educational_agent}, if it's expenses use {ocr_agent}"""
     ),
-    sub_agents=[family_agent,educational_agent,ocr_agent],
+    sub_agents=[family_agent,educational_agent,ocr_agent, emotion_agent],
 )

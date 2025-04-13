@@ -60,15 +60,18 @@
     <section class="right">
       <div class="up">
         <div class="historique">
-          <button>Last lesson</button>
-        </div>
-        <div class="historique">
-          <button>Emotion detection</button>
-        </div>
-        <div class="historique">
-          <button>
-            Play
+          <button
+            [routerLink]="['/budget']"
+            routerLinkActive="router-link-active"
+          >
+            Fitatanam-bola
           </button>
+        </div>
+        <div class="historique">
+          <app-video-analyzer></app-video-analyzer>
+        </div>
+        <div class="historique">
+          <button>Milalao</button>
         </div>
       </div>
 
@@ -82,14 +85,14 @@
           [ngStyle]="{ width: containerWidth + 'px' }"
         >
           <img
-            src="/assets/img/img.png"
+            src="/assets/img/room_display.png"
             alt=""
             class="object-cover"
             [ngStyle]="{ width: roomWidth + 'px', height: roomHeight + 'px' }"
           />
           <!--          <app-customizable-room [width]="roomWidth" [height]="roomHeight"></app-customizable-room>-->
           <button class="safePlace" *ngIf="!isGrowing" (click)="growRoom()">
-            Safeplace
+            Trano
           </button>
         </div>
 
@@ -97,6 +100,11 @@
         <div class="safeN border px-2 w-[160px] h-[40px] rounded-2xl " *ngIf="!isClicked">
           <img src="/assets/img/img.png" alt="" />
           <button class="safePlace" (click)="clickSafe()">Safeplace</button>
+
+        <div class="safeN" *ngIf="!isClicked">
+          <img src="/assets/img/room_display.png" alt="" />
+          <button class="safePlace" (click)="clickSafe()">Trano</button>
+
         </div>
       </div>
     </section>

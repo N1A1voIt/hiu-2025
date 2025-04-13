@@ -1,14 +1,25 @@
 import { CommonModule } from '@angular/common';
-import {Component, ElementRef, Renderer2, ViewChild} from '@angular/core';
-import { Router } from '@angular/router';
-import {CustomizableRoomComponent} from '../customizable-room/customizable-room.component';
+import { Component, ElementRef, Renderer2, ViewChild } from '@angular/core';
+import { Router, RouterModule } from '@angular/router';
+import { CustomizableRoomComponent } from '../customizable-room/customizable-room.component';
 import { FamilyComponent } from '../family/family.component';
+
 import {ClipboardComponent} from '../clipboard/clipboard.component';
+
+import {VideoAnalyzerComponent} from '../video-analyzer/video-analyzer.component';
 
 @Component({
   selector: 'app-landing',
   standalone: true,
   imports: [CommonModule, CustomizableRoomComponent, FamilyComponent, ClipboardComponent],
+
+  imports: [
+    CommonModule,
+    CustomizableRoomComponent,
+    FamilyComponent,
+    RouterModule,
+    VideoAnalyzerComponent,
+  ],
   templateUrl: './landing.component.html',
   styleUrl: './landing.component.scss',
 })
@@ -17,6 +28,7 @@ export class LandingComponent {
   isChat: boolean = false;
   isAnimating: boolean = false;
   isAnimatingChat: boolean = false;
+  isModal: boolean = false;
 
   isGrowing: boolean = false;
 
@@ -28,7 +40,8 @@ export class LandingComponent {
 
   growthRate: number = 10;
 
-  @ViewChild('customizableRoom', { static: false }) customizableRoom!: ElementRef;
+  @ViewChild('customizableRoom', { static: false })
+  customizableRoom!: ElementRef;
   @ViewChild('down', { static: false }) safeP!: ElementRef;
 
   constructor(private router: Router, private renderer: Renderer2) {}
@@ -37,7 +50,6 @@ export class LandingComponent {
     this.isAnimating = true;
     this.isClicked = !this.isClicked;
     this.isAnimating = false;
-
   }
   clickChat() {
     this.isAnimatingChat = true;
@@ -53,8 +65,10 @@ export class LandingComponent {
         element.style.padding = '0';
       }
       const children = element.querySelectorAll('*');
-      children.forEach((child, index, nodeList) => { // Corrected forEach signature
-        if ((child as HTMLElement).style.padding) { // Type assertion
+      children.forEach((child, index, nodeList) => {
+        // Corrected forEach signature
+        if ((child as HTMLElement).style.padding) {
+          // Type assertion
           (child as HTMLElement).style.padding = '0'; // Type assertion
         }
       });
@@ -85,7 +99,6 @@ export class LandingComponent {
 
       // Schedule next growth step
       requestAnimationFrame(() => this.growRoom());
-
     } else {
       this.router.navigate(['/room']);
     }

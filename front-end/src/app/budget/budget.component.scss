@@ -8,6 +8,9 @@
 .budget {
   display: flex;
   position: relative;
+  width: 100dvw;
+  height: 100dvh;
+  overflow: hidden;
 }
 .budget .content {
   display: flex;
@@ -62,4 +65,33 @@
   align-items: center;
   justify-content: center;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+.budget .info .contenu .plus svg{
+  padding-top: 13px;
+  fill: white;
+  padding-left: 4px;
+}
+.budget .right {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  position: absolute;
+  top: 4em;
+  right: 2em;
+}
+.budget .right .up {
+  display: flex;
+  flex-direction: row;
+  gap: 50px;
+  position: absolute;
+  top: -40px;
+  right: 0;
+}
+
+.budget .right .up .historique button {
+  padding: 5px 10px;
+  background-color: #ffffff27;
+  border: 1px solid #ffffff;
+  color: #fff;
+  border-radius: 20px;
 }
