@@ -1,0 +1,177 @@
+main {
+  background: #7855ed;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+article {
+  background: #0f0f0f;
+  width: 80%;
+  height: 90%;
+  border-radius: 2.5vw;
+}
+
+article section {
+  display: flex;
+  padding: 0.5vw;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  border-radius: 2.5vw;
+  position: relative;
+}
+
+.left {
+  position: relative;
+  overflow: hidden;
+  background: #7855ed;
+  padding: 0.5vw;
+  border-radius: 2vw;
+  flex: 1;
+  height: 87vh;
+  display: flex;
+  align-items: left;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.content {
+  padding: 3vw;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5vh;
+}
+
+.content p {
+  font-size: 0.7em;
+  color: #fff;
+  z-index: 1;
+}
+
+.accroche {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  padding-bottom: 0;
+  z-index: 1;
+}
+
+.accroche span {
+  color: #fff;
+  font-size: 2.5em;
+  white-space: nowrap;
+}
+
+.buttons {
+  display: flex;
+  justify-content: left;
+  gap: 3vw;
+  z-index: 1;
+}
+
+.other_option {
+  background: transparent;
+  border: 2px solid #fff;
+  color: #fff;
+  padding: 1vh 3vw;
+  border-radius: 2em;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+
+.other_option::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 300%;
+  height: 300%;
+  background-color: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  transition: all 0.5s ease;
+  transform: translate(-50%, -50%) scale(0);
+}
+
+.other_option:hover::before {
+  transform: translate(-50%, -50%) scale(2);
+}
+
+.choose_me {
+  background: #fff;
+  border: none;
+  color: #7855ed;
+  padding: 1vh 3vw;
+  border-radius: 2em;
+  transition: box-shadow 0.3s ease;
+}
+
+.choose_me:hover {
+  box-shadow: 0 0 0.6vw 0.3vw #bb96f7;
+}
+
+.holo {
+  position: absolute;
+  bottom: -20vh;
+  left: -3vw;
+}
+
+.holo img {
+  width: 20vw;
+  max-width: 300px;
+}
+
+.cercles {
+  position: absolute;
+  left: 20vw;
+}
+
+.grand {
+  width: 25vw;
+  height: 25vw;
+  max-width: 400px;
+  max-height: 400px;
+  background: #0f0f0f;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.petit {
+  width: 12.5vw;
+  height: 12.5vw;
+  max-width: 200px;
+  max-height: 200px;
+  background: #7855ed;
+  border-radius: 50%;
+}
+
+.right {
+  flex: 1;
+}
+
+.threed {
+  position: absolute;
+  width: 70vw;
+  max-width: 1200px;
+  top: 0.2vh;
+  left: 4vw;
+}
+
+.link {
+  position: absolute;
+  bottom: 5vh;
+  right: 1.5vw;
+  display: flex;
+  flex-direction: column;
+  gap: 2vh;
+}
+
+.link i {
+  font-size: 1.2em;
+  color: #fff;
+}

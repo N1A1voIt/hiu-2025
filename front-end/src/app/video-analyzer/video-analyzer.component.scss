@@ -1,0 +1,23 @@
+.capture-container {
+  position: absolute;
+  z-index: -99;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+video {
+  max-width: 100%;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+}
+.controls {
+  margin-top: 16px;
+}
+
+button {
+  padding: 5px 10px;
+  background-color: #ffffff27;
+  border: 1px solid #ffffff;
+  color: #fff;
+  border-radius: 20px;
+}

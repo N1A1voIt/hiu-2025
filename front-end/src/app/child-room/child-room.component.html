@@ -1,0 +1,57 @@
+<div class="overflow-hidden">
+  <canvas #canvas class="w-full h-dvh"></canvas>
+  <div *ngIf="!controlsActive && !isModificationMode" class="instructions" (click)="startExploring()">
+    <div class="content">
+      <h1>Click to explore the room</h1>
+      <p>Move: WASD / Arrow keys</p>
+      <p>Look: Mouse</p>
+    </div>
+  </div>
+
+<!--<div>-->
+
+<!--</div>-->
+<!--  <div *ngIf="!controlsActive" class="absolute z-50 w-20 h-20 bg-white rounded-full shadow-lg flex items-center justify-center left-20 top-10">-->
+<!--    <button class="toggle-modification-btn" (click)="toggleModificationMode()">-->
+<!--      {{ isModificationMode ? 'Quit Modification Mode' : 'Enter Modification Mode' }}-->
+<!--    </button>-->
+<!--  </div>-->
+<!--  <video #videoEl width="640" height="480" autoplay muted playsinline></video>-->
+<!--  <canvas #debugCanvas width="640" height="480" class="debug"></canvas>-->
+<div *ngIf="!controlsActive" class="modification-controls">
+    <div class="instructions-panel">
+        <h2>Modification Mode</h2>
+        <p>• Click and drag to move the bed</p>
+        <button class="save-btn" (click)="toggleModificationMode()">{{ isModificationMode ? 'Exit Modification Mode' : 'Enter Modification Mode' }}</button>
+    </div>
+
+    <div class="rotation-controls">
+        <button (click)="rotateBed(-Math.PI/8)">↺ Rotate Left</button>
+        <button (click)="rotateBed(Math.PI/8)">↻ Rotate Right</button>
+    </div>
+</div>
+
+
+  <!-- Color picker button -->
+  <div class="color-control" [class.active]="colorPickerVisible">
+    <button class="toggle-btn" (click)="toggleColorPicker($event)">
+      <span *ngIf="!colorPickerVisible">🎨</span>
+      <span *ngIf="colorPickerVisible">✖</span>
+    </button>
+
+    <div *ngIf="colorPickerVisible" class="color-panel">
+      <h3>Floor Color</h3>
+      <div class="color-options">
+        <button class="color-btn" style="background-color: #8B4513" (click)="changeFloorColor('#8B4513')"></button>
+        <button class="color-btn" style="background-color: #A0522D" (click)="changeFloorColor('#A0522D')"></button>
+        <button class="color-btn" style="background-color: #D2B48C" (click)="changeFloorColor('#D2B48C')"></button>
+        <button class="color-btn" style="background-color: #DEB887" (click)="changeFloorColor('#DEB887')"></button>
+        <button class="color-btn" style="background-color: #F5DEB3" (click)="changeFloorColor('#F5DEB3')"></button>
+        <button class="color-btn" style="background-color: #708090" (click)="changeFloorColor('#708090')"></button>
+        <button class="color-btn" style="background-color: #2F4F4F" (click)="changeFloorColor('#2F4F4F')"></button>
+        <button class="color-btn" style="background-color: #696969" (click)="changeFloorColor('#696969')"></button>
+      </div>
+      <input type="color" #colorInput (change)="changeFloorColor(colorInput.value)" class="color-picker">
+    </div>
+  </div>
+</div>

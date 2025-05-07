@@ -1,0 +1,87 @@
+<main class="budget">
+  <div class="bg">
+    <div class="w-[100dvw] h-[100dvh]">
+
+    <app-finance class=""></app-finance>
+    </div>
+<!--    <img-->
+<!--      src="/assets/img/placeholder2.jpg"-->
+<!--      alt="placeholder"-->
+<!--      class="w-[100dvw] h-[100dvh] object-cover"-->
+<!--    />-->
+  </div>
+  <section class="right">
+    <div class="up">
+      <div class="historique">
+        <button
+          [routerLink]="['/budget']"
+          routerLinkActive="router-link-active"
+        >
+          Budget
+        </button>
+      </div>
+      <div class="historique">
+        <app-video-analyzer></app-video-analyzer>
+      </div>
+      <div class="historique">
+        <button>Play</button>
+      </div>
+    </div>
+  </section>
+  <div class="content">
+    <div class="info">
+      <div class="contenu">
+        <div class="fond">
+          <svg width="456" height="314">
+            <path
+              d="M1 273V41C1 18.9086 18.9086 1 41 1H289C311.091 1 329 18.9086 329 41V43C329 65.0914 346.909 83 369 83H415C437.091 83 455 100.909 455 123V273C455 295.091 437.091 313 415 313H41C18.9086 313 1 295.091 1 273Z"
+              fill="black"
+              fill-opacity="0.32"
+              stroke="white"
+              stroke-width="1"
+              class="backdrop-blur-md"
+            />
+          </svg>
+        </div>
+        <div class="chiffre">
+          <p>Expense</p>
+          <h1>{{ totalExpenses }}</h1>
+        </div>
+        <div class="plus" >
+          <label for="fileUpload" class="cursor-pointer w-full h-full flex items-center justify-center">
+            <svg height="50" width="50" ><path d="m12 0a12 12 0 1 0 12 12 12.013 12.013 0 0 0 -12-12zm4 13h-3v3a1 1 0 0 1 -2 0v-3h-3a1 1 0 0 1 0-2h3v-3a1 1 0 0 1 2 0v3h3a1 1 0 0 1 0 2z"/></svg>
+          </label>
+          <input
+            type="file"
+            id="fileUpload"
+            class="hidden"
+            (change)="uploadFile($event)"
+          />
+
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="list absolute top-[5dvh] left-[5dvw] h-full w-[40%] p-4">
+    <div
+      class="backdrop-blur-md black/20 rounded-2xl shadow-lg p-4 text-white border border-white"
+    >
+      <table class="w-full text-left table-auto">
+        <thead>
+          <tr class="border-b border-white/30 text-lg">
+            <th class="pb-2">Date</th>
+            <th class="pb-2">Désignation</th>
+            <th class="pb-2">Prix</th>
+          </tr>
+        </thead>
+        <tbody class="text-sm">
+          <tr *ngFor="let b of budgets" class="hover:black/10 transition">
+            <td class="py-2">13/04/2025</td>
+            <td class="py-2">{{ b.title }}</td>
+            <td class="py-2">{{ b.total | currency}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</main>

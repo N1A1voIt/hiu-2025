@@ -1,0 +1,40 @@
+<video #videoCapture autoplay muted class="hidden"></video>
+<canvas #canvasOutput width="0" height="0"></canvas>
+
+<div class="border w-[160px] h-[40px] px-4 py-1 rounded-2xl flex justify-center items-center flex-col gap-2 ">
+  <input type="file" #fileInput (change)="onFileSelected($event)" style="display: none;">
+  <button  (click)="fileInput.click()" class="truncate">{{ selectedFile?.name || 'Select File'}}</button>
+  <div #draggable class="truncate hidden">
+    📎 {{ selectedFile?.name || 'Drag me' }}
+  </div>
+</div>
+<div>
+  <div>
+    <h3>Received Files</h3>
+    <ul>
+      <li *ngFor="let file of receivedFiles" (click)="showTeaser(file)">
+        {{ file.fileName }} ({{ file.fileSize }} bytes)
+      </li>
+    </ul>
+  </div>
+
+  <div class="popup" *ngIf="showPopup">
+    <div class="popup-content">
+      <h3>{{ popupFile.fileName }}</h3>
+      <p>Type: {{ popupFile.fileType }}</p>
+      <p>Size: {{ popupFile.fileSize }} bytes</p>
+
+      <div *ngIf="popupFile.fileType.startsWith('text/')">
+        <pre>{{ popupFile.content }}</pre>
+      </div>
+
+      <!-- If it's an image file, show preview -->
+      <div *ngIf="popupFile.fileType.startsWith('image/')">
+        <img [src]="'data:' + popupFile.fileType + ';base64,' + popupFile.content" alt="Image Preview">
+      </div>
+
+      <!-- Close button -->
+      <button (click)="closePopup()">Close</button>
+    </div>
+  </div>
+</div>

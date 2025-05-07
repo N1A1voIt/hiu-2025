@@ -1,0 +1,65 @@
+header {
+  position: absolute;
+  color: #fff;
+  z-index: 10;
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  top: 0;
+  padding: 30px;
+  align-items: center;
+}
+header .right {
+  display: flex;
+  gap: 30px;
+  justify-content: center;
+  align-items: center;
+}
+header .language {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  font-size: 0.8em;
+  justify-content: center;
+  align-items: center;
+}
+header .language p {
+  text-align: center;
+}
+header .search {
+  /* background-color: red; */
+}
+header .search i {
+  font-size: 0.8em;
+}
+header .bouton {
+  background: #7855ed;
+  color: #fff;
+  padding: 10px 15px;
+  border-radius: 20px;
+  border: none;
+  /* background-color: rgba(3, 177, 41, 0.661); */
+}
+
+header .left {
+  display: flex;
+  gap: 15px;
+  /* justify-content: space-between; */
+  align-items: center;
+}
+.logo svg {
+  width: 20px;
+}
+header .grid {
+  display: flex;
+}
+header nav {
+  display: flex;
+  gap: 20px;
+  padding-left: 30px;
+}
+header nav a {
+  color: #fff;
+  text-decoration: none;
+  font-size: 0.8em;
+}
